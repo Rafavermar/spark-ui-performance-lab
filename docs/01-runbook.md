@@ -967,6 +967,13 @@ Produce deterministic input:
 ./scripts/produce-streaming-data.sh
 ```
 
+Inspect Redpanda topics if needed:
+
+```bash
+./scripts/inspect-streaming.sh topics
+./scripts/inspect-streaming.sh consume spark-ui-lab-input 5
+```
+
 Streaming topics:
 
 - `spark-ui-lab-input`
@@ -980,7 +987,7 @@ If a streaming case fails because of missing topics or old checkpoints, run:
 ./scripts/produce-streaming-data.sh
 ```
 
-When you stop a streaming case, Spark may print cancellation warnings for the batch that was running at shutdown. If this happens after `Stopping streaming query` and the script exits normally, use the Spark UI evidence and History Server entry as the source of truth. See [Troubleshooting](04-troubleshooting.md#streaming-query-prints-cancellation-warnings-on-stop).
+Brief shutdown note: after `Stopping streaming query`, messages such as `TaskKilled` or `Could not find CoarseGrainedScheduler` usually mean controlled shutdown if the script exits normally. See [Troubleshooting](04-troubleshooting.md#streaming-query-prints-cancellation-warnings-on-stop).
 
 ## 12. Streaming Cases (15-17)
 
@@ -1099,6 +1106,8 @@ UI drilldown:
 - Compare micro-batch baseline with real-time advanced mode.
 - Do not use this case to claim fixed latency.
 - Optional: Environment can confirm real-time mode configuration.
+- Supporting tabs: Jobs and Stages should show recurring batches; Executors should show active tasks while the query is running.
+- For the topic flow and code map, see [Streaming and real-time mode](09-streaming-real-time-mode.md).
 
 Code-level baseline:
 
@@ -1116,7 +1125,7 @@ Code-level baseline:
 
 - The advanced run uses Spark 4.1 real-time trigger where supported.
 - Do not claim fixed latency. Compare query progress evidence only.
-- If shutdown prints Kafka sink or task cancellation warnings after `Stopping streaming query`, treat them as controlled shutdown noise unless the script exits with an error.
+- Shutdown warnings after `Stopping streaming query` are usually controlled stop noise if the script exits normally.
 
 Code-level advanced mode:
 

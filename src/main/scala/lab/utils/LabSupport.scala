@@ -80,6 +80,7 @@ object StreamingSupport {
     query.foreach { q =>
       if (q.isActive) {
         println(s"Stopping streaming query: ${q.name}")
+        println("Spark may print task-cancellation messages while the active streaming batch stops.")
         q.stop()
       }
     }

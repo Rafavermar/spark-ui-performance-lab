@@ -95,6 +95,7 @@ For the full explanation, see [Spark Configuration Guide](08-spark-configuration
 | `scripts/run-all.sh` | Runs batch cases [01](cases/01_too_many_actions.md) to [14](cases/14_config_validation.md) only. |
 | `scripts/up.sh` | Starts Spark default services without Redpanda. |
 | `scripts/up-streaming.sh` | Starts Spark plus Redpanda with Docker Compose profile `streaming`. |
+| `scripts/inspect-streaming.sh` | Lists Redpanda topics, describes topics and consumes sample records. |
 | `src/main/scala/lab/Main.scala` | CLI dispatcher: `<case_id> <mode>`. |
 | `src/main/scala/lab/cases/LabCase.scala` | Minimal common case interface. |
 | `src/main/scala/lab/utils/LabSupport.scala` | UI messages, job groups, paths and streaming query stop logic. |
@@ -127,6 +128,7 @@ Streaming cases require Redpanda:
 ./scripts/up-streaming.sh
 ./scripts/create-topics.sh
 ./scripts/produce-streaming-data.sh
+./scripts/inspect-streaming.sh topics
 ```
 
 | Case | Command | Scala object | Source file | Topics/checkpoints | Main UI tabs |

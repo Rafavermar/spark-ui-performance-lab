@@ -1,4 +1,4 @@
-.PHONY: up up-streaming down build generate-data run run-all create-topics produce-streaming-data reset-streaming export-metrics clean
+.PHONY: up up-streaming down build generate-data run run-all create-topics produce-streaming-data reset-streaming inspect-streaming export-metrics clean
 
 up:
 	bash scripts/up.sh
@@ -29,6 +29,9 @@ produce-streaming-data:
 
 reset-streaming:
 	bash scripts/reset-streaming.sh
+
+inspect-streaming:
+	bash scripts/inspect-streaming.sh $(ACTION) $(TOPIC) $(NUM)
 
 export-metrics:
 	bash scripts/export-metrics.sh $(CASE) $(MODE)

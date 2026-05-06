@@ -191,6 +191,12 @@ Shows streaming query progress, input rows/sec, processed rows/sec, batch durati
 
 Cases: [15](cases/15_structured_streaming_backlog.md), [16](cases/16_stateful_streaming.md), [17](cases/17_real_time_mode.md).
 
+Use it as the primary tab for streaming cases. Jobs, Stages and Executors are supporting evidence.
+
+For [case 17](cases/17_real_time_mode.md), some batch-style metrics can look sparse because the query is stateless Kafka-to-Kafka. Useful supporting evidence includes recurring jobs, recurring stages, active executor tasks and the real-time configuration in Environment.
+
+See [Streaming and real-time mode](09-streaming-real-time-mode.md) for the Redpanda topic flow and Spark 4.1 real-time mode code path.
+
 ## History Server
 
 Reads persisted Spark event logs after applications exit. Use it whenever the live UI was missed or when comparing baseline and optimized runs after both complete.

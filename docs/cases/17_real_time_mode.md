@@ -8,6 +8,8 @@ Compare standard micro-batch streaming with Spark 4.1 real-time mode for a state
 
 Real-time mode is an advanced execution option and should be evaluated through actual query progress evidence, not fixed latency promises.
 
+For the complete Redpanda topic flow, start/stop commands and code path, see [Streaming and real-time mode](../09-streaming-real-time-mode.md).
+
 ## Baseline Command
 
 ```bash
@@ -19,15 +21,23 @@ Real-time mode is an advanced execution option and should be evaluated through a
 
 ## What To Inspect In Spark UI
 
-Structured Streaming.
+- Structured Streaming.
+- Jobs.
+- Stages.
+- Executors.
+- Environment.
 
 ## UI Drilldown
 
 Use Structured Streaming query progress and trigger evidence. Compare micro-batch baseline with advanced real-time mode. Do not use this case to claim fixed latency numbers.
 
+Jobs and Stages are useful supporting evidence because real-time mode creates recurring active work. Executors can show active tasks distributed across workers. Environment can confirm the real-time mode configuration.
+
 ## Evidence Interpretation
 
 The signal is execution mode and query progress evidence. This is a feature comparison, not a benchmark; do not interpret exact latency or rows/sec as universal.
+
+Some Spark UI columns can be blank or low-signal for this stateless Kafka-to-Kafka query. For example, shuffle columns are not central because the case does not perform a shuffle.
 
 ## Common Misread
 
@@ -44,6 +54,8 @@ The baseline establishes standard micro-batch behavior for comparison.
 ## Code-Level Baseline
 
 `RealTimeModeCase.runBaseline` runs a stateless Kafka-to-Kafka query with standard micro-batch execution using `Trigger.ProcessingTime("5 seconds")`.
+
+Code location: [StreamingCases.scala](../../src/main/scala/lab/cases/StreamingCases.scala).
 
 ## Optimized Command
 
@@ -69,9 +81,20 @@ Use real-time mode only for a stateless streaming query and compare Structured S
 
 Compare trigger mode, query progress and processing metrics. Do not claim fixed latency.
 
+You can also inspect topic data:
+
+```bash
+./scripts/inspect-streaming.sh consume spark-ui-lab-input 5
+./scripts/inspect-streaming.sh consume spark-ui-lab-output 5
+```
+
+Use Redpanda to confirm records exist in topics. Use Spark UI to confirm Spark processing.
+
 ## Cleanup Notes
 
 Use `./scripts/reset-streaming.sh` before rerunning from scratch.
+
+After stopping the query, Spark may print task-cancellation messages while the active streaming batch shuts down. If the script exits normally, this is expected shutdown noise.
 
 ## Optional AI-Assisted Diagnosis
 

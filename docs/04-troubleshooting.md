@@ -119,6 +119,18 @@ Streaming cases require:
 
 Batch cases do not require Redpanda.
 
+To stop only Redpanda:
+
+```bash
+docker compose --profile streaming stop redpanda
+```
+
+To start it again with the rest of the streaming profile:
+
+```bash
+./scripts/up-streaming.sh
+```
+
 ## Topics Missing
 
 Run:
@@ -131,6 +143,15 @@ Then produce deterministic input:
 
 ```bash
 ./scripts/produce-streaming-data.sh
+```
+
+To inspect topics and records:
+
+```bash
+./scripts/inspect-streaming.sh topics
+./scripts/inspect-streaming.sh describe spark-ui-lab-input
+./scripts/inspect-streaming.sh consume spark-ui-lab-input 5
+./scripts/inspect-streaming.sh consume spark-ui-lab-output 5
 ```
 
 ## Streaming Checkpoint Cleanup

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="540" viewBox="0 0 1120 540" role="img" aria-labelledby="title desc">
+  <title id="title">Spark streaming and real-time mode flow</title>
+  <desc id="desc">Flow from scripts to Redpanda topics, Spark structured streaming cases and Spark UI evidence.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#384252"/>
+    </marker>
+    <style>
+      .bg { fill: #f7f8fb; }
+      .box { fill: #ffffff; stroke: #a8b3c4; stroke-width: 1.4; rx: 8; }
+      .spark { fill: #fff7ed; stroke: #f97316; }
+      .redpanda { fill: #fef2f2; stroke: #dc2626; }
+      .ui { fill: #eff6ff; stroke: #2563eb; }
+      .code { fill: #f8fafc; stroke: #475569; }
+      .title { font: 700 18px Arial, sans-serif; fill: #111827; }
+      .text { font: 14px Arial, sans-serif; fill: #1f2937; }
+      .small { font: 12px Arial, sans-serif; fill: #475569; }
+      .mono { font: 12px Consolas, monospace; fill: #1f2937; }
+      .arrow { stroke: #384252; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+      .dash { stroke-dasharray: 5 5; }
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="540"/>
+
+  <text class="title" x="40" y="42">Streaming And Real-Time Mode Flow</text>
+  <text class="small" x="40" y="64">Redpanda is optional infrastructure for cases 15-17. Spark UI remains the source of diagnosis.</text>
+
+  <rect class="box code" x="40" y="105" width="220" height="120"/>
+  <text class="title" x="60" y="135">Setup Scripts</text>
+  <text class="mono" x="60" y="162">up-streaming.sh</text>
+  <text class="mono" x="60" y="184">create-topics.sh</text>
+  <text class="mono" x="60" y="206">produce-streaming-data.sh</text>
+
+  <rect class="box redpanda" x="330" y="80" width="260" height="170"/>
+  <text class="title" x="350" y="112">Redpanda</text>
+  <text class="small" x="350" y="136">Kafka-compatible broker</text>
+  <text class="mono" x="350" y="166">spark-ui-lab-input</text>
+  <text class="mono" x="350" y="190">spark-ui-lab-output</text>
+  <text class="mono" x="350" y="214">spark-ui-lab-stateful-input</text>
+
+  <rect class="box spark" x="665" y="70" width="390" height="205"/>
+  <text class="title" x="690" y="105">Spark Structured Streaming</text>
+  <text class="mono" x="690" y="132">15 backlog: Kafka source -> foreachBatch</text>
+  <text class="mono" x="690" y="158">16 stateful: Kafka source -> state store</text>
+  <text class="mono" x="690" y="184">17 baseline: ProcessingTime trigger</text>
+  <text class="mono" x="690" y="210">17 advanced: Trigger.RealTime</text>
+  <text class="small" x="690" y="240">Code: StreamingCases.scala</text>
+
+  <rect class="box ui" x="665" y="340" width="390" height="130"/>
+  <text class="title" x="690" y="374">Spark UI Evidence</text>
+  <text class="mono" x="690" y="402">Structured Streaming tab</text>
+  <text class="mono" x="690" y="426">Jobs / Stages recurring batches</text>
+  <text class="mono" x="690" y="450">Environment real-time config</text>
+
+  <rect class="box code" x="40" y="325" width="220" height="110"/>
+  <text class="title" x="60" y="357">Redpanda Inspect</text>
+  <text class="mono" x="60" y="384">inspect-streaming.sh</text>
+  <text class="mono" x="60" y="408">topics | describe</text>
+  <text class="mono" x="60" y="432">consume input/output</text>
+
+  <path class="arrow" d="M260 165 C290 165, 300 165, 330 165"/>
+  <path class="arrow" d="M590 165 C625 165, 630 165, 665 165"/>
+  <path class="arrow" d="M860 275 L860 340"/>
+  <path class="arrow dash" d="M665 410 C515 440, 405 430, 260 390"/>
+  <path class="arrow dash" d="M260 380 C300 340, 305 235, 330 215"/>
+
+  <text class="small" x="280" y="150">create + produce</text>
+  <text class="small" x="602" y="150">read/write Kafka topics</text>
+  <text class="small" x="875" y="313">diagnose here</text>
+  <text class="small" x="365" y="443">confirm records and offsets</text>
+</svg>

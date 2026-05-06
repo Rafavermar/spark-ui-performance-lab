@@ -89,11 +89,14 @@ Open the live Spark UI while a case is paused at <http://localhost:4040>. After 
 ./scripts/up-streaming.sh
 ./scripts/create-topics.sh
 ./scripts/produce-streaming-data.sh
+./scripts/inspect-streaming.sh topics
 ./scripts/run-case.sh 15_structured_streaming_backlog baseline
 ./scripts/run-case.sh 15_structured_streaming_backlog optimized
 ```
 
 Streaming cases are [15](docs/cases/15_structured_streaming_backlog.md), [16](docs/cases/16_stateful_streaming.md) and [17](docs/cases/17_real_time_mode.md). Case [17_real_time_mode](docs/cases/17_real_time_mode.md) supports `baseline` and `advanced` modes; `optimized` is accepted as an alias for the advanced mode.
+
+For the Redpanda topic flow and Spark 4.1 real-time mode, see [Streaming and real-time mode](docs/09-streaming-real-time-mode.md).
 
 ## Stop And Clean
 
@@ -103,6 +106,12 @@ Streaming cases are [15](docs/cases/15_structured_streaming_backlog.md), [16](do
 ```
 
 `clean.sh` removes generated data, metrics, tmp files, checkpoints and warehouse data. It does not delete source files.
+
+To stop only Redpanda while keeping the Spark services running:
+
+```bash
+docker compose --profile streaming stop redpanda
+```
 
 ## What This Lab Does Not Do
 
@@ -134,4 +143,5 @@ The goal is to learn Spark UI diagnosis first. The prompt templates help learner
 - [Lab flow tree](docs/06-lab-flow-tree.md)
 - [Screenshot capture guide](docs/07-screenshot-capture-guide.md)
 - [Spark configuration guide](docs/08-spark-configuration.md)
+- [Streaming and real-time mode](docs/09-streaming-real-time-mode.md)
 - [Why AI is documentation-only](docs/ai/00-why-ai-is-documentation-only.md)
