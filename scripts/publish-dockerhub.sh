@@ -14,7 +14,7 @@ fi
 
 SPARK_VERSION="${SPARK_VERSION:-4.1.1}"
 LOCAL_IMAGE="${LOCAL_SPARK_IMAGE:-spark-ui-performance-lab-spark:${SPARK_VERSION}}"
-DOCKERHUB_IMAGE="${DOCKERHUB_SPARK_IMAGE:-rafavermar/spark-ui-performance-lab-spark:${SPARK_VERSION}}"
+DOCKERHUB_IMAGE="${DOCKERHUB_SPARK_IMAGE:-jrvm/spark-ui-performance-lab-spark:${SPARK_VERSION}}"
 DOCKERHUB_LATEST="${DOCKERHUB_IMAGE%:*}:latest"
 
 echo "Building local image: $LOCAL_IMAGE"

@@ -88,14 +88,14 @@ Open the live Spark UI while a case is paused at <http://localhost:4040>. After 
 The default path builds the Spark lab image locally. The project also supports using a prebuilt image from Docker Hub after it has been published:
 
 ```bash
-docker pull rafavermar/spark-ui-performance-lab-spark:4.1.1
+docker pull jrvm/spark-ui-performance-lab-spark:4.1.1
 cp .env.example .env
 ```
 
 Set these values in `.env`:
 
 ```bash
-SPARK_IMAGE=rafavermar/spark-ui-performance-lab-spark:4.1.1
+SPARK_IMAGE=jrvm/spark-ui-performance-lab-spark:4.1.1
 SPARK_USE_PREBUILT_IMAGE=true
 ```
 
