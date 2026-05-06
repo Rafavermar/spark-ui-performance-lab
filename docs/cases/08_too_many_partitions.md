@@ -18,6 +18,10 @@ Many tiny tasks can make overhead dominate useful work.
 
 Jobs and Stages.
 
+## UI Drilldown
+
+Use Stages for task count and Stage detail for many tiny task durations. If visible, scheduler delay helps explain overhead. Timeline is useful when the UI looks noisy because of many short tasks.
+
 ## Expected Baseline Symptoms
 
 Hundreds of tiny tasks appear.

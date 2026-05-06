@@ -18,6 +18,10 @@ UDFs can make plans less optimizer-friendly and harder to reason about in SQL UI
 
 SQL.
 
+## UI Drilldown
+
+Open SQL Plan Details and search for UDF-related expressions. In optimized mode, confirm that the labeling logic appears as native conditional expressions. Stage metrics are secondary.
+
 ## Expected Baseline Symptoms
 
 The physical plan includes UDF-related expressions.

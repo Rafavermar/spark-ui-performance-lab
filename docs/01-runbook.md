@@ -136,7 +136,30 @@ Use this exact loop for every batch case:
 
 Do not compare random tabs. Compare the tabs listed for the case.
 
-## 7. Batch Cases
+## 7. How Deep To Inspect The UI
+
+Use the listed tabs as the required path. Then use the drilldowns only when the case needs them.
+
+| Drilldown | Use it when | Skip it when |
+|---|---|---|
+| Jobs Event Timeline | You need to see many jobs, retries or streaming-like bursts over time. | You only need the final job count. |
+| Job detail page | You need `Associated SQL Query`, completed/skipped stage counts or retry evidence. | The Jobs table already proves the symptom. |
+| Stage detail page | You need task-level evidence: skew, spill, failed attempts, scheduler delay or partition count. | The Stages table already shows enough. |
+| DAG Visualization | You need to understand repeated lineage or shuffle boundaries. | The case is about config, cache visibility or simple job count. |
+| SQL/DataFrame query | The case depends on physical plan shape: `Exchange`, join type, UDF, AQE or stateful operators. | The case only needs Jobs, Storage or Environment. |
+| Plan Details | You need exact operator names. | The visual plan already shows the relevant operator. |
+
+Common UI terms:
+
+- `Scheduling Mode: FIFO`: Spark is running jobs in submission order. This is the default in this lab and is not tuned by the cases.
+- `Skipped Stages`: not a failure. Spark reused already completed stage output inside the same application.
+- `Associated SQL Query`: DataFrame code still produces SQL/DataFrame executions. Open it when the case asks you to inspect SQL evidence.
+- `WholeStageCodegen`: Spark fused several physical operators into generated JVM code. It is normal; do not treat it as a problem by itself.
+- `Exchange`: shuffle boundary. Treat it as important in shuffle, join, skew and AQE cases.
+
+For the detailed UI vocabulary, use [Spark UI Map](02-spark-ui-map.md).
+
+## 8. Batch Cases
 
 Batch cases `01` to `14` do not require Redpanda.
 
@@ -154,6 +177,13 @@ Inspect:
 
 - Jobs tab.
 - Stages tab.
+
+UI drilldown:
+
+- Required: Jobs table and `Completed Jobs`.
+- Optional: Event Timeline to see the cluster of separate actions over time.
+- Optional: one Job DAG to see similar lineage repeated.
+- Skip detailed stage metrics for now; later cases use those metrics more directly.
 
 Expected baseline evidence:
 
@@ -214,14 +244,24 @@ Inspect:
 - Stages tab.
 - Storage tab.
 
+UI drilldown:
+
+- Required: Jobs table, Stages table and Storage tab.
+- Open one Job detail page and follow `Associated SQL Query` once. This connects the DataFrame action to the SQL/DataFrame plan.
+- Open one SQL query plan and notice the repeated pattern: source, filter/project, aggregate and shuffle. Do not analyze every operator yet.
+- Open one Stage detail page only to learn the layout. For this case, focus on repeated stages and empty Storage, not on GC, spill or locality.
+
 Expected baseline evidence:
 
 - Similar stages repeat across multiple actions.
 - Storage tab does not show a useful persisted intermediate.
+- Several jobs may show skipped stages. This is normal stage reuse inside the same application and does not mean the DataFrame was cached.
 
 Diagnosis:
 
 - Spark recomputes lineage because nothing is persisted.
+- Repeated completed stages plus an empty Storage tab are the main evidence.
+- Skipped stages mean Spark reused completed stage output opportunistically; persistence is still missing because Storage has no cached DataFrame.
 
 Code-level cause:
 
@@ -261,6 +301,13 @@ Inspect:
 
 - SQL tab.
 - Stages tab.
+
+UI drilldown:
+
+- Required: SQL query, Plan Visualization and Plan Details.
+- Search the plan for `Exchange`.
+- Open the Stages table and compare shuffle read/write.
+- DAG is useful here because shuffle boundaries are part of the lesson.
 
 Expected baseline evidence:
 
@@ -311,6 +358,13 @@ Inspect:
 - SQL tab.
 - Stages tab.
 
+UI drilldown:
+
+- Required: SQL query and Plan Details.
+- In baseline, look for `SortMergeJoin` and `Exchange`.
+- In optimized, look for `BroadcastHashJoin` or `BroadcastExchange`.
+- Use Stages only to confirm shuffle shape changed.
+
 Expected baseline evidence:
 
 - Physical plan shows `SortMergeJoin`.
@@ -351,6 +405,13 @@ Inspect:
 - Stages tab.
 - SQL tab.
 - Task table inside the slow stage.
+
+UI drilldown:
+
+- Required: Stage detail page for the slowest stage.
+- Sort or scan task duration percentiles and max task duration.
+- Open SQL plan to connect the skew symptom to the join and aggregation.
+- DAG is useful if you want to see where shuffle creates reduce-side tasks.
 
 Expected baseline evidence:
 
@@ -396,6 +457,13 @@ Inspect:
 - Jobs tab.
 - Stages tab.
 
+UI drilldown:
+
+- Required: Stages table task counts.
+- Open one Stage detail page and look at number of tasks and very short durations.
+- Timeline is useful if many tiny tasks/jobs make the run look noisy.
+- SQL plan is not central for this case.
+
 Expected baseline evidence:
 
 - Many short tasks.
@@ -438,6 +506,12 @@ Inspect:
 - Executors tab.
 - Stages tab.
 
+UI drilldown:
+
+- Required: Stages task count and Executors task activity.
+- Stage detail helps confirm there are too few tasks.
+- DAG and SQL are not central here.
+
 Expected baseline evidence:
 
 - Very few tasks.
@@ -479,6 +553,13 @@ Inspect:
 - Jobs tab.
 - Stages tab.
 
+UI drilldown:
+
+- Required: Stages task count.
+- Open Stage detail and look for many tiny task durations plus scheduler delay if visible.
+- Timeline can show the overhead pattern.
+- DAG is secondary; partition count is the lesson.
+
 Expected baseline evidence:
 
 - Hundreds of tiny tasks.
@@ -519,6 +600,13 @@ Inspect:
 
 - Stages tab.
 - Executors tab.
+
+UI drilldown:
+
+- Required: Stage detail metrics.
+- Look for memory spill, disk spill, peak execution memory, GC time and long task durations.
+- Executors tab helps confirm memory/GC pressure.
+- SQL plan is optional unless you want to connect pressure to sort/aggregate operators.
 
 Expected baseline evidence:
 
@@ -563,6 +651,12 @@ Inspect:
 - Storage tab while the app is paused.
 - Executors tab.
 
+UI drilldown:
+
+- Required: Storage tab.
+- Executors tab helps show storage memory usage.
+- Jobs, DAG and SQL are secondary because the lesson is whether cached data is actually useful.
+
 Expected baseline evidence:
 
 - Storage tab shows cached data.
@@ -602,6 +696,13 @@ Inspect:
 
 - SQL tab.
 
+UI drilldown:
+
+- Required: SQL query and Plan Details.
+- Search for UDF-related expressions in baseline.
+- In optimized, verify native conditional expressions are used.
+- Stage metrics are secondary.
+
 Expected baseline evidence:
 
 - The plan includes UDF-related expressions.
@@ -640,6 +741,13 @@ Inspect:
 
 - SQL tab.
 - Stages tab.
+
+UI drilldown:
+
+- Required: SQL query, Plan Visualization and Plan Details.
+- Compare initial/final adaptive plan evidence.
+- Look for `AdaptiveSparkPlan` and `AQEShuffleRead`.
+- Stages help confirm shuffle adaptation, but the SQL plan is the primary evidence.
 
 Expected baseline evidence:
 
@@ -682,6 +790,13 @@ Inspect:
 - Stages tab.
 - Executors tab.
 
+UI drilldown:
+
+- Required: Jobs and Stages detail pages.
+- Look for failed task attempt and later successful retry.
+- Event Timeline is useful because retry timing is visible.
+- Executors helps confirm failed task counts/log links.
+
 Expected baseline evidence:
 
 - One failed task attempt.
@@ -722,6 +837,12 @@ Inspect:
 
 - Environment tab.
 
+UI drilldown:
+
+- Required: Environment tab, Spark Properties section.
+- Compare printed terminal config with UI values.
+- Jobs, Stages, SQL and DAG are not part of the diagnosis here.
+
 Expected baseline evidence:
 
 - Spark Properties show the actual values.
@@ -749,7 +870,7 @@ Code-level fix:
 - The difference comes from `scripts/run-case.sh`, which passes explicit `--conf` values for this optimized mode.
 - The verification happens in the Spark UI Environment tab.
 
-## 8. Streaming Setup
+## 9. Streaming Setup
 
 Streaming cases require Redpanda. Start the streaming profile:
 
@@ -782,7 +903,7 @@ If a streaming case fails because of missing topics or old checkpoints, run:
 ./scripts/produce-streaming-data.sh
 ```
 
-## 9. Streaming Cases
+## 10. Streaming Cases
 
 ### 15_structured_streaming_backlog
 
@@ -797,6 +918,12 @@ Baseline:
 Inspect:
 
 - Structured Streaming tab.
+
+UI drilldown:
+
+- Required: Structured Streaming query progress.
+- Compare input rows/sec, processed rows/sec and batch duration.
+- Jobs and Stages are secondary unless you need to debug a specific micro-batch.
 
 Expected baseline evidence:
 
@@ -840,6 +967,12 @@ Inspect:
 - Structured Streaming tab.
 - State operator metrics.
 
+UI drilldown:
+
+- Required: Structured Streaming state operator metrics.
+- Look for state rows, memory used by state and batch progress.
+- SQL plan is secondary; the state metrics are the main evidence.
+
 Expected baseline evidence:
 
 - State rows accumulate for the aggregation.
@@ -881,6 +1014,12 @@ Inspect:
 
 - Structured Streaming tab.
 
+UI drilldown:
+
+- Required: Structured Streaming query progress and trigger evidence.
+- Compare micro-batch baseline with real-time advanced mode.
+- Do not use this case to claim fixed latency.
+
 Code-level baseline:
 
 - In `RealTimeModeCase.runBaseline`, the stateless Kafka-to-Kafka query uses standard micro-batch execution with `Trigger.ProcessingTime("5 seconds")`.
@@ -904,7 +1043,7 @@ Code-level advanced mode:
 - It uses `Trigger.RealTime("5 seconds")` for the same stateless Kafka-to-Kafka pattern.
 - `optimized` is accepted as an alias for `advanced`, but the documentation uses `advanced` because this is a Spark 4.1 capability demonstration, not a universal performance fix.
 
-## 10. Metrics Export
+## 11. Metrics Export
 
 After running a case:
 
@@ -916,7 +1055,7 @@ This writes a minimal History Server REST export to `metrics/`.
 
 The exporter intentionally captures the application index only. Use the app id in the JSON for deeper manual API calls.
 
-## 11. Cleanup
+## 12. Cleanup
 
 Stop containers:
 
@@ -940,7 +1079,7 @@ Clean generated artifacts:
 
 It does not delete source files.
 
-## 12. When Something Is Confusing
+## 13. When Something Is Confusing
 
 Use this order:
 

@@ -18,6 +18,10 @@ Scheduler overhead can dominate when work per task is too small.
 
 Jobs and Stages.
 
+## UI Drilldown
+
+Use Stages to compare task counts and very short task durations. Open one Stage detail page if you want to see the tiny-task pattern more clearly. SQL plan details are not central for this case.
+
 ## Expected Baseline Symptoms
 
 Many short tasks appear while reading the small JSON files.

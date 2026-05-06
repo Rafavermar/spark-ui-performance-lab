@@ -18,6 +18,10 @@ Performance diagnosis depends on knowing which Spark properties actually applied
 
 Environment.
 
+## UI Drilldown
+
+Use only the Environment tab, especially Spark Properties. Compare those values with terminal output. Jobs, Stages, SQL and DAG are intentionally not part of this diagnosis.
+
 ## Expected Baseline Symptoms
 
 The printed configuration should match Spark Properties in the Environment tab.

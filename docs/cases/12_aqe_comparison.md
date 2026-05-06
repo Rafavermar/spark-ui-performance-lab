@@ -18,6 +18,10 @@ AQE can adapt plans at runtime, especially around shuffle partitioning.
 
 SQL and Stages.
 
+## UI Drilldown
+
+Use SQL Plan Visualization and Plan Details as the primary evidence. Look for `AdaptiveSparkPlan`, initial/final plan sections and `AQEShuffleRead`. Use Stages to confirm shuffle behavior changed.
+
 ## Expected Baseline Symptoms
 
 The plan is non-adaptive and uses the configured shuffle partitions directly.

@@ -18,6 +18,10 @@ Broadcasting a genuinely small table can remove expensive sort-merge shuffle wor
 
 SQL and Stages.
 
+## UI Drilldown
+
+Use Plan Details as the primary evidence. In baseline, look for `SortMergeJoin` and `Exchange`. In optimized, look for `BroadcastHashJoin` or `BroadcastExchange`. Stages confirm whether shuffle work changed.
+
 ## Expected Baseline Symptoms
 
 The physical plan shows SortMergeJoin and Exchange operators.

@@ -18,6 +18,10 @@ Each action can rescan or recompute upstream work, increasing runtime and making
 
 Jobs and Stages.
 
+## UI Drilldown
+
+Use the Jobs table as the primary evidence. The Event Timeline is optional and helps show that several actions created separate jobs. Open one DAG only if you want to see similar lineage repeated; detailed stage metrics are introduced later.
+
 ## Expected Baseline Symptoms
 
 Several jobs appear for `count`, filtered `count`, grouped `count` and aggregate actions.

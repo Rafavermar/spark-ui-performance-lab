@@ -18,6 +18,10 @@ Spill often indicates that Spark is moving data out of memory during expensive s
 
 Stages and Executors.
 
+## UI Drilldown
+
+Use Stage detail metrics as the main evidence: memory spill, disk spill, peak execution memory, GC time and long task duration. Executors helps confirm memory or GC pressure. SQL is optional unless you want to connect pressure to sort/aggregate operators.
+
 ## Expected Baseline Symptoms
 
 Look for memory spill, disk spill, long task times or executor memory pressure. Spill visibility depends on machine resources.

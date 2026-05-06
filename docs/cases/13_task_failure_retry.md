@@ -18,6 +18,10 @@ Spark may recover from task failures, but retries still appear in UI and affect 
 
 Jobs, Stages and Executors.
 
+## UI Drilldown
+
+Use Jobs and Stages detail pages to find the failed task attempt and retry. Event Timeline is useful because retry timing is visible. Executors helps confirm failed task counts and provides log links.
+
 ## Expected Baseline Symptoms
 
 One task attempt fails and a retry succeeds.

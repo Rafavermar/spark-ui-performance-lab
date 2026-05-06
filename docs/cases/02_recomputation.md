@@ -18,9 +18,15 @@ Spark recomputes lineage for every action unless an intermediate result is persi
 
 Jobs, Stages and Storage.
 
+## UI Drilldown
+
+Use Jobs and Stages to see repeated execution, then use Storage to prove that no persisted intermediate exists. Open one Job detail page and follow `Associated SQL Query` once; this shows that DataFrame actions appear in the SQL/DataFrame tab. Open one Stage detail page only to learn the layout. For this case, do not focus on GC, spill or locality unless they are extreme.
+
 ## Expected Baseline Symptoms
 
 Repeated stages appear for the same transformation lineage. Storage does not show useful persisted data.
+
+Some jobs may show skipped stages. That is normal stage reuse inside the same Spark application. It is not the same as DataFrame persistence; the Storage tab is the evidence for cache/persist.
 
 ## Diagnosis Explanation
 

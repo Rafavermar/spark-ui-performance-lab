@@ -18,6 +18,10 @@ Storage memory can evict useful data or pressure executors.
 
 Storage and Executors.
 
+## UI Drilldown
+
+Use Storage as the primary evidence. Executors can show storage memory usage. Jobs, Stages and SQL are secondary because the diagnosis is about whether cached data is actually reused.
+
 ## Expected Baseline Symptoms
 
 The Storage tab shows cached data, but the cached DataFrame is not reused enough to justify it.

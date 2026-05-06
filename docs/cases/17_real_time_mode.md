@@ -21,6 +21,10 @@ Real-time mode is an advanced execution option and should be evaluated through a
 
 Structured Streaming.
 
+## UI Drilldown
+
+Use Structured Streaming query progress and trigger evidence. Compare micro-batch baseline with advanced real-time mode. Do not use this case to claim fixed latency numbers.
+
 ## Expected Baseline Symptoms
 
 The query uses regular micro-batch processing with Kafka source and sink.

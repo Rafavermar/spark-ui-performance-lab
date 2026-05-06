@@ -18,6 +18,10 @@ Spark cannot use available cores if there are too few tasks.
 
 Executors and Stages.
 
+## UI Drilldown
+
+Use Stages for task count and Executors for task activity per executor. The key question is whether there is enough parallel work to use the cluster. DAG and SQL plan details are secondary.
+
 ## Expected Baseline Symptoms
 
 Very few tasks appear, and executor utilization is low.

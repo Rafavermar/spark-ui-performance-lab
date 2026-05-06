@@ -21,6 +21,10 @@ Backlog symptoms show up as growing batch duration or processed rows/sec lagging
 
 Structured Streaming.
 
+## UI Drilldown
+
+Use Structured Streaming query progress: batch duration, input rows/sec and processed rows/sec. Jobs and Stages are secondary unless a specific micro-batch needs debugging.
+
 ## Expected Baseline Symptoms
 
 Batch duration is intentionally slower than the trigger interval because the query adds processing delay.

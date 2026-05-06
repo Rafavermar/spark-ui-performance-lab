@@ -21,6 +21,10 @@ Unbounded streaming state increases memory pressure and recovery cost.
 
 Structured Streaming state operator metrics.
 
+## UI Drilldown
+
+Use state operator metrics as the primary evidence: state rows, memory used by state and batch progress. SQL plan details are secondary for this case.
+
 ## Expected Baseline Symptoms
 
 State rows accumulate for a wide window with no watermark.

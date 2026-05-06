@@ -18,6 +18,10 @@ Skew makes one or a few tasks become stragglers while other tasks finish quickly
 
 Stages task table and SQL.
 
+## UI Drilldown
+
+Open the slowest Stage detail page. Compare task duration percentiles and max duration; this is where skew becomes visible. Use SQL to connect the symptom to the join and aggregation shape.
+
 ## Expected Baseline Symptoms
 
 Task duration distribution is uneven, with one or a few tasks much slower.
