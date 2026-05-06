@@ -113,7 +113,7 @@ Streaming cases are `15`, `16` and `17`. Case `17_real_time_mode` supports `base
 - No external datasets.
 - No fake benchmark claims or fixed latency promises.
 - No mandatory Redpanda for batch cases.
-- No screenshots in public docs. Learners should inspect their own Spark UI evidence.
+- Screenshots are used selectively for UI orientation. Learners should still reproduce and inspect their own Spark UI evidence.
 
 ## AI Scope
 

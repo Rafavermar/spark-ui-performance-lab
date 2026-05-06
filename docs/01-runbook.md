@@ -227,7 +227,7 @@ For qualitative value reading:
 
 Each case document also has a `Common Misread` section. Read it before judging whether a run "worked"; many Spark UI improvements are visible through the right evidence, not through a single lower number.
 
-## 10. Batch Cases
+## 10. Batch Cases (01-14)
 
 Batch cases `01` to `14` do not require Redpanda.
 
@@ -947,7 +947,7 @@ Code-level fix:
 - The difference comes from `scripts/run-case.sh`, which passes explicit `--conf` values for this optimized mode.
 - The verification happens in the Spark UI Environment tab.
 
-## 11. Streaming Setup
+## 11. Streaming Setup For Cases 15-17
 
 Streaming cases require Redpanda. Start the streaming profile:
 
@@ -980,7 +980,7 @@ If a streaming case fails because of missing topics or old checkpoints, run:
 ./scripts/produce-streaming-data.sh
 ```
 
-## 12. Streaming Cases
+## 12. Streaming Cases (15-17)
 
 ### 15_structured_streaming_backlog
 

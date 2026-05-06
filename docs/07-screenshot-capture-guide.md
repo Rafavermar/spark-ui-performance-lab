@@ -204,9 +204,9 @@ Suggested filenames under `docs/assets/spark-ui-map/`:
 | 10 | `10-executors-summary.png` | Executors tab | Driver, executors, cores, tasks, storage memory, shuffle and logs columns. |
 | 11 | `11-executor-thread-dump.png` | Thread Dump link | Thread dump page header and a small readable thread sample. |
 | 12 | `12-executor-heap-histogram.png` | Heap Histogram link | Histogram header and top object rows. |
-| 13 | `13-sql-query-list.png` | SQL/DataFrame tab | Query list with durations and associated jobs. |
-| 14 | `14-sql-plan-visualization.png` | SQL query detail | Plan Visualization with operators such as `Exchange` or `HashAggregate`. |
-| 15 | `15-sql-plan-details.png` | SQL query detail | Plan Details text with operator names. |
+| 13 | `13-sql-plan-visualization.png` | SQL query detail | Plan Visualization with operators such as `Exchange` or `HashAggregate`. |
+| 14 | `14-sql-plan-details.png` | SQL query detail | Plan Details text with operator names and SQL/DataFrame properties. |
+| 15 | `15-environment-runtime-properties.png` | Environment tab | Runtime Information and top Spark Properties. |
 | 16 | `16-environment-spark-properties.png` | Environment tab | Spark Properties with relevant config keys. |
 | 17 | `17-structured-streaming-progress.png` | Structured Streaming tab | Batch duration, input rows/sec, processed rows/sec. |
 

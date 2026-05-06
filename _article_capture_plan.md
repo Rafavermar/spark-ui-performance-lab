@@ -45,5 +45,5 @@ Private helper for article or video production. Do not link this file from `READ
 ## Author Notes
 
 - Avoid claiming exact timing improvements.
-- Mention that screenshots are intentionally excluded from public docs.
+- Mention that screenshots in public docs are illustrative, while each learner should reproduce their own Spark UI evidence.
 - Keep Redpanda framed as optional infrastructure for streaming cases only.

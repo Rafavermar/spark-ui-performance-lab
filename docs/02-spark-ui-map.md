@@ -8,6 +8,8 @@ Spark UI has built-in help in many tables. Hover over column titles such as task
 
 Shows Spark jobs created by actions. Use it to diagnose repeated actions, failed jobs, retry patterns and jobs that finish too quickly to inspect elsewhere.
 
+![Jobs tab with event timeline and completed jobs](assets/spark-ui-map/03-jobs-tab-timeline.png)
+
 Cases: `01`, `02`, `06`, `08`, `13`.
 
 What to read:
@@ -27,6 +29,8 @@ Common interpretation:
 ## Stages
 
 Shows stage DAGs, task counts, task duration distribution, shuffle read/write, spill and failed task attempts. Use it for skew, partitioning, shuffle explosion, spill and retries.
+
+![Stages tab with task counts and shuffle columns](assets/spark-ui-map/05-stages-table.png)
 
 Cases: `01`, `02`, `03`, `05`, `06`, `07`, `08`, `09`, `12`, `13`.
 
@@ -53,17 +57,32 @@ Stage detail metrics:
 
 Shows cached or persisted DataFrames/RDDs. Use it to verify whether persistence helps or whether memory is wasted.
 
+![Storage tab with a persisted DataFrame](assets/spark-ui-map/09-storage-persisted-optimized.png)
+
 Cases: `02`, `10`.
 
 ## Environment
 
 Shows actual Spark properties, JVM information and classpath evidence. Use it to verify what config Spark actually received.
 
+![Environment tab with runtime and Spark properties](assets/spark-ui-map/15-environment-runtime-properties.png)
+
 Cases: `14`.
+
+What to read:
+
+- `Runtime Information`: Java and Scala versions used by the application.
+- `Spark Properties`: the final values Spark received after defaults, submit arguments and case-level overrides.
+- `spark.app.name`: confirms case id and mode.
+- `spark.master`, `spark.executor.memory`, `spark.sql.shuffle.partitions`, `spark.sql.adaptive.enabled`: common lab values to verify.
+
+Use this tab when the question is "what configuration actually ran?". Do not infer active configuration only from a script or from memory.
 
 ## Executors
 
 Shows executor memory, task totals, failed tasks, shuffle, storage and GC-related evidence. Use it to detect underuse, spill pressure and task retry impact.
+
+![Executors tab with task, storage, shuffle and log links](assets/spark-ui-map/10-executors-summary.png)
 
 Cases: `07`, `09`, `10`, `13`.
 
@@ -93,6 +112,26 @@ Executor drilldowns:
 - Use `stdout` and `stderr` logs when a task or executor fails. The lab configures workers with `SPARK_PUBLIC_DNS=localhost` so new executor log links should open from the host browser.
 - If an old application still shows internal names such as `spark-worker-1:8081`, replace them with `localhost:8081` or `localhost:8082`, or recreate the services and rerun the case.
 
+Thread Dump:
+
+![Executor thread dump with thread states and stack trace](assets/spark-ui-map/11-executor-thread-dump.png)
+
+- A thread dump is a point-in-time snapshot of JVM thread stacks.
+- `RUNNABLE` means a thread is executing or ready to execute on CPU.
+- `WAITING` and `TIMED_WAITING` usually mean a thread is parked, sleeping or waiting for coordination.
+- `BLOCKED`, if present, means a thread is waiting to enter a synchronized section.
+- Use it after Executors or Stages suggest a stuck driver/executor, not as the first diagnostic tab.
+
+Heap Histogram:
+
+![Executor heap histogram with object classes, instances and bytes](assets/spark-ui-map/12-executor-heap-histogram.png)
+
+- A heap histogram groups live JVM objects by class at the time of capture.
+- `Instances` is the number of objects of that class.
+- `Bytes` is the approximate memory footprint for that class.
+- Class names such as `[B`, `[I` and `[Ljava.lang.Object;` are JVM array types: byte array, int array and object array.
+- Large Spark/JVM internals are normal. Treat this as advanced memory evidence, not as proof of a Spark SQL problem by itself.
+
 When this lab uses Executors:
 
 | Case | Why Executors matters |
@@ -107,6 +146,8 @@ Thread Dump and Heap Histogram are intentionally not required for any default ca
 ## SQL
 
 Shows SQL/DataFrame query plans and execution metrics. Use it to inspect Exchange, SortMergeJoin, BroadcastHashJoin, AdaptiveSparkPlan, UDF expressions and physical plan shape.
+
+![SQL plan visualization with operator metrics](assets/spark-ui-map/13-sql-plan-visualization.png)
 
 Cases: `03`, `04`, `05`, `11`, `12`.
 
@@ -137,6 +178,12 @@ When to use SQL:
 - Optional in `01` and `02`: open one query to connect DataFrame actions to SQL plans, but do not over-analyze every operator.
 - Required in `03`, `04`, `05`, `11` and `12`: the physical plan is part of the diagnosis.
 - Helpful in `09`: use it if you want to connect spill or memory pressure to sort/aggregate operators.
+
+Plan Details:
+
+![SQL plan details with physical plan text and SQL/DataFrame properties](assets/spark-ui-map/14-sql-plan-details.png)
+
+Read Plan Visualization first for shape, then Plan Details for exact operator names and config values. In this lab, text search for `Exchange`, `SortMergeJoin`, `BroadcastHashJoin`, `BroadcastExchange`, `AdaptiveSparkPlan`, `AQEShuffleRead` or UDF-related expressions is usually enough.
 
 ## Structured Streaming
 
