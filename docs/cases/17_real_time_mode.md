@@ -29,6 +29,10 @@ Use Structured Streaming query progress and trigger evidence. Compare micro-batc
 
 The signal is execution mode and query progress evidence. This is a feature comparison, not a benchmark; do not interpret exact latency or rows/sec as universal.
 
+## Common Misread
+
+Do not present real-time mode as a guaranteed latency number. This case demonstrates where to inspect the execution mode and query progress evidence.
+
 ## Expected Baseline Symptoms
 
 The query uses regular micro-batch processing with Kafka source and sink.

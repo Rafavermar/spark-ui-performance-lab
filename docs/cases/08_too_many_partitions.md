@@ -26,6 +26,10 @@ Use Stages for task count and Stage detail for many tiny task durations. If visi
 
 The signal is excessive task count for a small dataset. Scheduler delay or many tiny task durations support the diagnosis, but the exact milliseconds vary by machine.
 
+## Common Misread
+
+Do not conclude that fewer partitions is always better. This case teaches that excessive partitions hurt small data; too few partitions can underuse the cluster, as shown in case `07`.
+
 ## Expected Baseline Symptoms
 
 Hundreds of tiny tasks appear.

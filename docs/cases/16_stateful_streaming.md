@@ -29,6 +29,10 @@ Use state operator metrics as the primary evidence: state rows, memory used by s
 
 The signal is state growth and whether state is bounded by watermark/window design. Exact state memory varies; state rows and watermark behavior are the main evidence.
 
+## Common Misread
+
+Do not expect watermarking to delete all state immediately. State cleanup depends on event-time progress, watermark advancement and completed windows.
+
 ## Expected Baseline Symptoms
 
 State rows accumulate for a wide window with no watermark.

@@ -26,6 +26,10 @@ Use Stages for task count and Executors for task activity per executor. The key 
 
 The signal is too little parallel work. If task count is lower than available cores or concentrated on too few executors, the cluster is underused. Exact runtime is not the main evidence.
 
+## Common Misread
+
+Do not expect the optimized case to have fewer tasks. Here the fix is the opposite: create enough partitions to use the available executors.
+
 ## Expected Baseline Symptoms
 
 Very few tasks appear, and executor utilization is low.

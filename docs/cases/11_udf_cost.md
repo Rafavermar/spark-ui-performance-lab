@@ -26,6 +26,10 @@ Open SQL Plan Details and search for UDF-related expressions. In optimized mode,
 
 The signal is operator/expression presence in the SQL plan, not runtime. Baseline should expose UDF-related execution; optimized should use built-in expressions that Catalyst can represent directly.
 
+## Common Misread
+
+Do not require a dramatic runtime difference. This case is about plan readability and optimizer-friendly expressions.
+
 ## Expected Baseline Symptoms
 
 The physical plan includes UDF-related expressions.

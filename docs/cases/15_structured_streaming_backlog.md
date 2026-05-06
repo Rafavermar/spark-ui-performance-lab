@@ -29,6 +29,10 @@ Use Structured Streaming query progress: batch duration, input rows/sec and proc
 
 The signal is backlog tendency: processing takes longer than the trigger cadence or processed rows/sec lags input rows/sec. Exact rates depend on host resources and Kafka/Redpanda timing.
 
+## Common Misread
+
+Do not compare one isolated micro-batch. Watch several progress updates and compare the trend between input rate, processed rate and batch duration.
+
 ## Expected Baseline Symptoms
 
 Batch duration is intentionally slower than the trigger interval because the query adds processing delay.

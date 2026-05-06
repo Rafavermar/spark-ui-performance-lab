@@ -225,6 +225,8 @@ For qualitative value reading:
 - Baseline vs optimized direction is meaningful for shuffle, duration, task distribution and streaming rates.
 - Exact milliseconds, KiB/MiB and rows/sec are local observations, not universal expected values.
 
+Each case document also has a `Common Misread` section. Read it before judging whether a run "worked"; many Spark UI improvements are visible through the right evidence, not through a single lower number.
+
 ## 10. Batch Cases
 
 Batch cases `01` to `14` do not require Redpanda.

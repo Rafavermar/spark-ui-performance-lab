@@ -26,6 +26,10 @@ Use Plan Details as the primary evidence. In baseline, look for `SortMergeJoin` 
 
 The join operator is the decisive evidence. Baseline should show shuffle join behavior, while optimized should show broadcast evidence. Shuffle byte changes are useful but secondary.
 
+## Common Misread
+
+Do not judge this case by runtime alone. The intended evidence is the physical plan changing from shuffle join behavior to broadcast join behavior.
+
 ## Expected Baseline Symptoms
 
 The physical plan shows SortMergeJoin and Exchange operators.

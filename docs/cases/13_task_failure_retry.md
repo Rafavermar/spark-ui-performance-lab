@@ -26,6 +26,10 @@ Use Jobs and Stages detail pages to find the failed task attempt and retry. Even
 
 The signal is failure followed by successful retry. Exact timing is irrelevant; look for failed task attempt evidence in Jobs/Stages and a final successful application.
 
+## Common Misread
+
+Do not treat the baseline failure as an accidental crash. It is a controlled one-time failure designed to make retry evidence visible.
+
 ## Expected Baseline Symptoms
 
 One task attempt fails and a retry succeeds.

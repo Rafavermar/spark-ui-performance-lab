@@ -26,6 +26,10 @@ Use Jobs and Stages to see repeated execution, then use Storage to prove that no
 
 Repeated stage pattern means similar stage shapes and task counts appear across several actions over the same lineage. Do not require identical shuffle read/write bytes; those numbers are supporting evidence and can vary. Storage is the decisive evidence: empty in baseline, populated during optimized inspection.
 
+## Common Misread
+
+Do not treat similar job count as a failed optimization. This fix adds a materialization action; the improvement is that reused data appears in Storage and later actions can read from it.
+
 ## Expected Baseline Symptoms
 
 Repeated stages appear for the same transformation lineage. Storage does not show useful persisted data.

@@ -26,6 +26,10 @@ Open the slowest Stage detail page. Compare task duration percentiles and max du
 
 The signal is uneven task distribution: most tasks finish much earlier than the slowest task. Exact durations are machine-dependent; compare the spread between median/75th percentile and max task duration.
 
+## Common Misread
+
+Do not expect every task to take exactly the same time after optimization. The goal is a less extreme spread, not perfectly identical task durations.
+
 ## Expected Baseline Symptoms
 
 Task duration distribution is uneven, with one or a few tasks much slower.

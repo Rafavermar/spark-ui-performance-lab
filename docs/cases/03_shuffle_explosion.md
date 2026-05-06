@@ -26,6 +26,10 @@ Open the SQL query, Plan Visualization and Plan Details. Search for `Exchange`, 
 
 The decisive signal is physical plan shape: wide grouping before projection/filtering and visible `Exchange` operators. Shuffle read/write values should move in the right direction after optimization, but exact bytes depend on execution details.
 
+## Common Misread
+
+Do not expect shuffle to disappear completely. Aggregations and ordering can still require shuffle; the optimized case reduces unnecessary rows, columns and partitions.
+
 ## Expected Baseline Symptoms
 
 The SQL plan shows Exchange operators. Stages show shuffle read/write for wide rows that include payload columns.

@@ -26,6 +26,10 @@ Use only the Environment tab, especially Spark Properties. Compare those values 
 
 The signal is exact configuration value, not performance behavior. Environment is the source of truth for active Spark properties in this case.
 
+## Common Misread
+
+Do not compare runtimes for this case. The lesson is how to prove which Spark configuration actually reached the application.
+
 ## Expected Baseline Symptoms
 
 The printed configuration should match Spark Properties in the Environment tab.

@@ -26,6 +26,10 @@ Use the Jobs table as the primary evidence. The Event Timeline is optional and h
 
 The signal is job count and repeated action pattern, not task duration. Skipped stages can appear because Spark reuses completed stage output inside the same application; they do not invalidate the diagnosis.
 
+## Common Misread
+
+Do not expect every action to produce the same number of stages. The learning point is that one logical case can create multiple Spark jobs when the code triggers multiple actions.
+
 ## Expected Baseline Symptoms
 
 Several jobs appear for `count`, filtered `count`, grouped `count` and aggregate actions.

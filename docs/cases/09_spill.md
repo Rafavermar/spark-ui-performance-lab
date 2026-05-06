@@ -26,6 +26,10 @@ Use Stage detail metrics as the main evidence: memory spill, disk spill, peak ex
 
 Spill bytes are strong evidence when they appear, but they can vary with Docker memory and host resources. If spill is low or absent, use wide rows, low partition count, peak memory, GC and longer tasks as supporting evidence.
 
+## Common Misread
+
+Do not assume the lab is broken if spill is not large on your machine. Host memory, Docker resources and JVM behavior can change spill visibility.
+
 ## Expected Baseline Symptoms
 
 Look for memory spill, disk spill, long task times or executor memory pressure. Spill visibility depends on machine resources.

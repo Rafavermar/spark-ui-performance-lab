@@ -26,6 +26,10 @@ Use Storage as the primary evidence. Executors can show storage memory usage. Jo
 
 The signal is cached data without meaningful reuse. Storage tab presence is decisive; executor storage memory is supporting evidence and exact memory values are machine-dependent.
 
+## Common Misread
+
+Do not treat any tiny executor storage value as meaningful cache misuse. Look for a visible cached dataset in the Storage tab and whether the code actually reuses it.
+
 ## Expected Baseline Symptoms
 
 The Storage tab shows cached data, but the cached DataFrame is not reused enough to justify it.

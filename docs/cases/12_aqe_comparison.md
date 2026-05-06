@@ -26,6 +26,10 @@ Use SQL Plan Visualization and Plan Details as the primary evidence. Look for `A
 
 The signal is adaptive plan evidence, not a fixed speedup. Compare plan structure and shuffle adaptation markers; stage counts and durations are supporting evidence.
 
+## Common Misread
+
+Do not expect AQE to always reduce every visible metric. The goal is to see adaptive planning evidence for the same query shape.
+
 ## Expected Baseline Symptoms
 
 The plan is non-adaptive and uses the configured shuffle partitions directly.

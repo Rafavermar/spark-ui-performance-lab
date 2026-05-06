@@ -26,6 +26,10 @@ Use Stages to compare task counts and very short task durations. Open one Stage 
 
 The signal is task count relative to data size. Many short tasks indicate scheduling overhead from many files; exact task durations and input bytes are supporting evidence only.
 
+## Common Misread
+
+Do not count the compaction write as a free operation. The optimization demonstrates creating a better downstream layout, so compare the downstream read pattern after compaction.
+
 ## Expected Baseline Symptoms
 
 Many short tasks appear while reading the small JSON files.
