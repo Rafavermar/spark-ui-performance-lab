@@ -146,6 +146,30 @@ Streaming cases require Redpanda:
 7. Run the optimized command.
 8. Compare the same tabs again.
 
+## Fix Implementation Map
+
+Use this table to connect the UI symptom with the code-level change applied by `runOptimized`.
+
+| Case | Baseline creates | Optimized changes |
+|---|---|---|
+| `01_too_many_actions` | Runs several independent actions over the same filtered/transformed DataFrame: `count`, filtered `count`, grouped `count`, aggregate `collect`. | Computes the required metrics together in one aggregate action, reducing Spark jobs. |
+| `02_recomputation` | Reuses an expensive transformed DataFrame without persistence. | Adds `persist(MEMORY_AND_DISK)`, materializes once and unpersists after inspection. |
+| `03_shuffle_explosion` | Groups by wide payload columns and uses more shuffle partitions. | Filters early, selects fewer columns, groups by fewer keys and lowers local shuffle partitions. |
+| `04_broadcast_join` | Disables broadcast and forces a shuffle join shape. | Enables broadcast threshold and uses `broadcast(dim)` for the small side. |
+| `05_data_skew` | Joins data with a dominant hot key and disables skew handling. | Salts the hot key, expands the small side for salted keys and enables skew handling. |
+| `06_small_files` | Reads many small JSON files directly. | Compacts input into fewer Parquet files before downstream reading. |
+| `07_too_few_partitions` | Forces one partition. | Repartitions to a reasonable local parallelism value. |
+| `08_too_many_partitions` | Forces hundreds of partitions for small data. | Coalesces/repartitions to fewer tasks. |
+| `09_spill` | Uses wide rows and low shuffle partition count. | Narrows rows and increases partitioning for lower memory pressure. |
+| `10_cache_misuse` | Caches a wide DataFrame that is not reused enough. | Removes unnecessary cache. |
+| `11_udf_cost` | Uses a Scala UDF for simple even/odd labeling. | Replaces UDF with built-in `when/otherwise` SQL expressions. |
+| `12_aqe_comparison` | Disables AQE for the query. | Enables AQE for the same query shape. |
+| `13_task_failure_retry` | Intentionally fails one partition once. | Validates and filters bad input before processing. |
+| `14_config_validation` | Prints active config for inspection. | Passes explicit `spark-submit` config and verifies it in Environment. |
+| `15_structured_streaming_backlog` | Uses higher offsets per trigger and an artificial processing delay. | Lowers offsets per trigger and removes artificial delay. |
+| `16_stateful_streaming` | Stateful aggregation without a bounded watermark strategy. | Adds watermarking and smaller bounded windows. |
+| `17_real_time_mode` | Runs a standard micro-batch stateless query. | Uses Spark 4.1 real-time trigger where supported. |
+
 ## Visual Dependency Map
 
 ![Spark UI Performance Lab execution flow](assets/lab-execution-flow.svg)

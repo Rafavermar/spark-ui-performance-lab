@@ -44,6 +44,8 @@ Fewer jobs because the summary is computed in one aggregate action.
 
 Consolidate actions and compute required metrics together where possible.
 
+In `src/main/scala/lab/cases/BatchCasesPart1.scala`, `runBaseline` executes several actions over the same DataFrame. `runOptimized` computes the same learning-relevant metrics in one aggregate action, so Spark has fewer jobs to schedule.
+
 ## How To Verify Improvement
 
 Compare the number of jobs and stages in baseline vs optimized executions.

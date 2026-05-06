@@ -170,6 +170,15 @@ Diagnosis:
 - For this first case, the important evidence is the number of jobs and repeated action pattern. You do not need to deeply inspect the DAG yet.
 - Optional: open a job or stage DAG to see that Spark is repeatedly walking similar lineage. Detailed DAG reading becomes more important in shuffle, join and skew cases.
 
+Code-level cause:
+
+- In `src/main/scala/lab/cases/BatchCasesPart1.scala`, `TooManyActions.runBaseline` executes several actions over the same DataFrame:
+  - `df.count()`
+  - `df.where(...).count()`
+  - `df.groupBy(...).count().count()`
+  - `df.agg(...).collect()`
+- Each action is allowed to create a Spark job.
+
 Optimized:
 
 ```bash
@@ -180,6 +189,14 @@ Verify:
 
 - Jobs tab should be simpler.
 - The optimized run computes summary metrics together.
+
+Code-level fix:
+
+- `TooManyActions.runOptimized` replaces several independent actions with one aggregate:
+  - total rows
+  - high-score rows
+  - amount sum
+- This is why the optimized UI shows fewer jobs and stages.
 
 ### 02_recomputation
 
