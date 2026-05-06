@@ -77,12 +77,32 @@ What to read:
 - `Storage Memory`: cached/persisted data footprint. Use this with the Storage tab.
 - `Shuffle Read` and `Shuffle Write`: executor-level data movement.
 - `Logs`: useful when a task fails and you need stdout/stderr.
+- `Thread Dump`: point-in-time JVM stack traces for driver or executor threads.
+- `Heap Histogram`: JVM object histogram showing object classes and approximate memory footprint.
 
 How to interpret values:
 
 - Exact task time, GC time, storage memory and shuffle bytes are not portable benchmark numbers.
 - Distribution is more important than the exact value. For example, case `07` should show underuse with too few tasks; case `10` should show storage memory when unnecessary cache is used; case `13` should show failed task evidence.
 - A small non-zero `Storage Memory` value can appear even when the primary Storage tab has no meaningful cached dataset. Use the Storage tab as the source of truth for persisted DataFrames.
+
+Executor drilldowns:
+
+- Use `Thread Dump` only when the app appears stuck, blocked or spending unexpected time outside normal task execution. It is advanced JVM evidence, not required for the main lab flow.
+- Use `Heap Histogram` only when investigating memory pressure beyond the normal Storage, Stages and Executors metrics. It can show large object families, but it is not a Spark SQL diagnosis by itself.
+- Use `stdout` and `stderr` logs when a task or executor fails. In Docker, Spark may generate log links with container-internal hostnames. If a log link from <http://localhost:4040> does not open, use the mapped Worker UIs directly: <http://localhost:8081> and <http://localhost:8082>.
+- Worker links shown inside Spark UI may point to internal names such as `spark-worker-1:8081`. From the host browser, replace them with `localhost:8081` or `localhost:8082`.
+
+When this lab uses Executors:
+
+| Case | Why Executors matters |
+|---|---|
+| `07_too_few_partitions` | Confirm that available cores/workers are underused because there are too few tasks. |
+| `09_spill` | Support spill or memory-pressure diagnosis with GC, task time and executor memory evidence. |
+| `10_cache_misuse` | Support Storage evidence by showing storage memory used by cached data. |
+| `13_task_failure_retry` | Confirm failed task counts and use logs if the controlled failure needs inspection. |
+
+Thread Dump and Heap Histogram are intentionally not required for any default case. They are included as advanced exploration tools after the learner understands the normal Spark UI evidence.
 
 ## SQL
 

@@ -12,6 +12,24 @@ Start Docker Desktop, then run:
 
 The lab uses `8080`, `8081`, `8082`, `4040`, `18080` and optionally `9092`. Stop the conflicting process or change the port mapping in `docker-compose.yml`.
 
+## Spark UI Worker Or Log Link Does Not Open
+
+Spark sometimes renders links using Docker-internal hostnames such as:
+
+```text
+spark-worker-1:8081
+spark-worker-2:8082
+```
+
+Those names work inside the Docker network, but not always from your host browser.
+
+Use the host port mappings instead:
+
+- Worker 1 UI: <http://localhost:8081>
+- Worker 2 UI: <http://localhost:8082>
+
+If executor `stdout` or `stderr` links from <http://localhost:4040> do not open, navigate through the Worker UI directly or use Docker logs for low-level debugging.
+
 ## Spark App Finished Before Opening Live UI
 
 Open Spark History Server at <http://localhost:18080>. Event logs are persisted in the shared `spark-events` volume.

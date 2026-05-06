@@ -183,3 +183,31 @@ Capture:
 5. Case 10 Storage tab: cache is visible and measurable.
 6. Case 15 Structured Streaming tab: streaming evidence is different from batch evidence.
 7. Closing screenshot: History Server with completed baseline and optimized applications.
+
+## Spark UI Map Capture Set
+
+Use this set if you want screenshots inside a Spark UI explanation article or a richer local copy of [Spark UI Map](02-spark-ui-map.md). Keep screenshots focused and crop browser chrome if it does not add context.
+
+Suggested filenames under `docs/assets/spark-ui-map/`:
+
+| Order | Filename | Where to capture | What must be visible |
+|---:|---|---|---|
+| 01 | `01-master-ui-workers.png` | <http://localhost:8080> | Spark Master, two alive workers, total cores and memory. |
+| 02 | `02-history-server-apps.png` | <http://localhost:18080> | Completed baseline/optimized apps with app names. |
+| 03 | `03-jobs-tab-timeline.png` | <http://localhost:4040/jobs/> | Jobs tab, completed jobs and Event Timeline. |
+| 04 | `04-job-detail-associated-sql.png` | One job detail page | Associated SQL Query, completed/skipped stages. |
+| 05 | `05-stages-table.png` | <http://localhost:4040/stages/> | Stage list, task counts, shuffle read/write columns. |
+| 06 | `06-stage-detail-metrics.png` | One stage detail page | Summary metrics and additional metric checkboxes. |
+| 07 | `07-stage-dag-visualization.png` | Stage detail page | DAG Visualization expanded. |
+| 08 | `08-storage-empty-baseline.png` | Storage tab in a baseline case | Empty Storage tab, useful for `02_recomputation` baseline. |
+| 09 | `09-storage-persisted-optimized.png` | Storage tab while optimized app is paused | Persisted dataset visible, useful for `02_recomputation` optimized. |
+| 10 | `10-executors-summary.png` | Executors tab | Driver, executors, cores, tasks, storage memory, shuffle and logs columns. |
+| 11 | `11-executor-thread-dump.png` | Thread Dump link | Thread dump page header and a small readable thread sample. |
+| 12 | `12-executor-heap-histogram.png` | Heap Histogram link | Histogram header and top object rows. |
+| 13 | `13-sql-query-list.png` | SQL/DataFrame tab | Query list with durations and associated jobs. |
+| 14 | `14-sql-plan-visualization.png` | SQL query detail | Plan Visualization with operators such as `Exchange` or `HashAggregate`. |
+| 15 | `15-sql-plan-details.png` | SQL query detail | Plan Details text with operator names. |
+| 16 | `16-environment-spark-properties.png` | Environment tab | Spark Properties with relevant config keys. |
+| 17 | `17-structured-streaming-progress.png` | Structured Streaming tab | Batch duration, input rows/sec, processed rows/sec. |
+
+Do not include every screenshot in the public README. Use them selectively: one overview screenshot, one Jobs/Stages example, one SQL plan example, one Storage example and one Structured Streaming example are usually enough for an article.
