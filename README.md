@@ -83,6 +83,43 @@ make run CASE=01_too_many_actions MODE=optimized
 
 Open the live Spark UI while a case is paused at <http://localhost:4040>. After it exits, use Spark History Server at <http://localhost:18080>.
 
+## Optional Prebuilt Docker Image
+
+The default path builds the Spark lab image locally. The project also supports using a prebuilt image from Docker Hub after it has been published:
+
+```bash
+docker pull rafavermar/spark-ui-performance-lab-spark:4.1.1
+cp .env.example .env
+```
+
+Set these values in `.env`:
+
+```bash
+SPARK_IMAGE=rafavermar/spark-ui-performance-lab-spark:4.1.1
+SPARK_USE_PREBUILT_IMAGE=true
+```
+
+Then start the lab normally:
+
+```bash
+./scripts/up.sh
+```
+
+For streaming:
+
+```bash
+./scripts/up-streaming.sh
+```
+
+The repository is still required because it provides the scripts, source code, docs and mounted workspace.
+
+Maintainers can publish the image with:
+
+```bash
+docker login
+./scripts/publish-dockerhub.sh
+```
+
 ## Streaming Case Example
 
 ```bash

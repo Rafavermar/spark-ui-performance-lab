@@ -1,7 +1,7 @@
 name: spark-ui-performance-lab
 
 x-spark-image: &spark-image
-  image: spark-ui-performance-lab-spark:${SPARK_VERSION:-4.1.1}
+  image: ${SPARK_IMAGE:-spark-ui-performance-lab-spark:${SPARK_VERSION:-4.1.1}}
   build:
     context: .
     dockerfile: docker/spark-client/Dockerfile

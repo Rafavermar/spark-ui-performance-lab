@@ -12,7 +12,13 @@ if [ -f .env ]; then
   set +a
 fi
 
-docker compose --profile streaming up -d --build \
+BUILD_ARGS=(--build)
+if [ "${SPARK_USE_PREBUILT_IMAGE:-false}" = "true" ]; then
+  docker compose --profile streaming pull spark-master spark-worker-1 spark-worker-2 spark-history-server spark-client redpanda
+  BUILD_ARGS=(--no-build)
+fi
+
+docker compose --profile streaming up -d "${BUILD_ARGS[@]}" \
   spark-master \
   spark-worker-1 \
   spark-worker-2 \

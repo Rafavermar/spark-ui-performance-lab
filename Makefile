@@ -1,4 +1,4 @@
-.PHONY: up up-streaming down build generate-data run run-all create-topics produce-streaming-data reset-streaming inspect-streaming export-metrics clean
+.PHONY: up up-streaming down build generate-data run run-all create-topics produce-streaming-data reset-streaming inspect-streaming publish-dockerhub export-metrics clean
 
 up:
 	bash scripts/up.sh
@@ -32,6 +32,9 @@ reset-streaming:
 
 inspect-streaming:
 	bash scripts/inspect-streaming.sh $(ACTION) $(TOPIC) $(NUM)
+
+publish-dockerhub:
+	bash scripts/publish-dockerhub.sh
 
 export-metrics:
 	bash scripts/export-metrics.sh $(CASE) $(MODE)

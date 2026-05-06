@@ -189,9 +189,13 @@ Read Plan Visualization first for shape, then Plan Details for exact operator na
 
 Shows streaming query progress, input rows/sec, processed rows/sec, batch duration, state operator metrics and query status.
 
+![Structured Streaming active query overview](assets/spark-ui-map/17-structured-streaming-progress.png)
+
 Cases: [15](cases/15_structured_streaming_backlog.md), [16](cases/16_stateful_streaming.md), [17](cases/17_real_time_mode.md).
 
 Use it as the primary tab for streaming cases. Jobs, Stages and Executors are supporting evidence.
+
+![Structured Streaming query statistics](assets/spark-ui-map/18-structured-streaming-query-statistics.png)
 
 For [case 17](cases/17_real_time_mode.md), some batch-style metrics can look sparse because the query is stateless Kafka-to-Kafka. Useful supporting evidence includes recurring jobs, recurring stages, active executor tasks and the real-time configuration in Environment.
 

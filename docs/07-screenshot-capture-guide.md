@@ -244,5 +244,10 @@ Suggested filenames under `docs/assets/spark-ui-map/`:
 | 15 | `15-environment-runtime-properties.png` | Environment tab | Runtime Information and top Spark Properties. |
 | 16 | `16-environment-spark-properties.png` | Environment tab | Spark Properties with relevant config keys. |
 | 17 | `17-structured-streaming-progress.png` | Structured Streaming tab | Batch duration, input rows/sec, processed rows/sec. |
+| 18 | `18-structured-streaming-query-statistics.png` | Structured Streaming query detail | Timelines and histograms for input/process rate and batch duration. |
+| 19 | `19-streaming-sql-microbatch-plan.png` | SQL/DataFrame query detail | `MicroBatchScan` and `WriteToDataSourceV2` for streaming. |
+| 20 | `20-real-time-jobs-recurring-batches.png` | Jobs tab during case `17` advanced | Recurring real-time jobs and active job. |
+| 21 | `21-real-time-stages-recurring-batches.png` | Stages tab during case `17` advanced | Recurring 5 second stages and active stage. |
+| 22 | `22-real-time-executors-active-tasks.png` | Executors tab during case `17` advanced | Active tasks distributed across executors. |
 
 Do not include every screenshot everywhere. Use them selectively: one overview screenshot, one Jobs/Stages example, one SQL plan example, one Storage example and one Structured Streaming example are usually enough to improve understanding without making the documentation heavy.

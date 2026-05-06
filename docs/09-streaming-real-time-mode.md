@@ -112,6 +112,22 @@ Useful supporting tabs:
 
 Some batch-style columns can be empty or low-signal for Kafka-to-Kafka streaming. For example, Stages may show no shuffle because the case is stateless and does not shuffle data. For case `17`, query progress, recurring jobs/stages and active executor tasks are more important than shuffle columns.
 
+![Real-time mode recurring Jobs evidence](assets/spark-ui-map/20-real-time-jobs-recurring-batches.png)
+
+Jobs should show recurring work for the running streaming query. In real-time mode, this is useful evidence when the Structured Streaming tab has sparse rate values.
+
+![Real-time mode recurring Stages evidence](assets/spark-ui-map/21-real-time-stages-recurring-batches.png)
+
+Stages should show repeated batches and active tasks. For this stateless Kafka-to-Kafka case, shuffle columns are not the main signal.
+
+![Real-time mode executor active tasks](assets/spark-ui-map/22-real-time-executors-active-tasks.png)
+
+Executors should show active tasks distributed across workers while the query is running.
+
+![Streaming SQL micro-batch plan](assets/spark-ui-map/19-streaming-sql-microbatch-plan.png)
+
+The SQL/DataFrame plan can show `MicroBatchScan` and `WriteToDataSourceV2`. Use it as supporting evidence, not as the primary streaming diagnosis tab.
+
 ## Shutdown Messages
 
 Stopping a live streaming query can cancel the batch currently running. If the terminal prints `TaskKilled`, `MicroBatchWrite ... is aborting` or `Could not find CoarseGrainedScheduler` after `Stopping streaming query`, and the script exits with status `0`, treat it as controlled shutdown noise.
