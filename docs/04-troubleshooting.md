@@ -14,7 +14,9 @@ The lab uses `8080`, `8081`, `8082`, `4040`, `18080` and optionally `9092`. Stop
 
 ## Spark UI Worker Or Log Link Does Not Open
 
-Spark sometimes renders links using Docker-internal hostnames such as:
+The lab configures Spark workers with `SPARK_PUBLIC_DNS=localhost` so new Worker UI and executor log links should be browser-friendly.
+
+If you are looking at an application that was started before the latest Docker Compose configuration was applied, Spark may still render links using Docker-internal hostnames such as:
 
 ```text
 spark-worker-1:8081
@@ -29,6 +31,15 @@ Use the host port mappings instead:
 - Worker 2 UI: <http://localhost:8082>
 
 If executor `stdout` or `stderr` links from <http://localhost:4040> do not open, navigate through the Worker UI directly or use Docker logs for low-level debugging.
+
+To apply the browser-friendly worker links after pulling changes, recreate the Spark services:
+
+```bash
+./scripts/down.sh
+./scripts/up.sh
+```
+
+Then rerun the case. Old completed applications in History Server can still contain the old internal links because event logs preserve the original executor log URLs.
 
 ## Spark App Finished Before Opening Live UI
 

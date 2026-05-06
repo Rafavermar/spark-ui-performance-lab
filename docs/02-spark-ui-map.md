@@ -90,8 +90,8 @@ Executor drilldowns:
 
 - Use `Thread Dump` only when the app appears stuck, blocked or spending unexpected time outside normal task execution. It is advanced JVM evidence, not required for the main lab flow.
 - Use `Heap Histogram` only when investigating memory pressure beyond the normal Storage, Stages and Executors metrics. It can show large object families, but it is not a Spark SQL diagnosis by itself.
-- Use `stdout` and `stderr` logs when a task or executor fails. In Docker, Spark may generate log links with container-internal hostnames. If a log link from <http://localhost:4040> does not open, use the mapped Worker UIs directly: <http://localhost:8081> and <http://localhost:8082>.
-- Worker links shown inside Spark UI may point to internal names such as `spark-worker-1:8081`. From the host browser, replace them with `localhost:8081` or `localhost:8082`.
+- Use `stdout` and `stderr` logs when a task or executor fails. The lab configures workers with `SPARK_PUBLIC_DNS=localhost` so new executor log links should open from the host browser.
+- If an old application still shows internal names such as `spark-worker-1:8081`, replace them with `localhost:8081` or `localhost:8082`, or recreate the services and rerun the case.
 
 When this lab uses Executors:
 
