@@ -22,6 +22,8 @@ Jobs, Stages and Storage.
 
 Use Jobs and Stages to see repeated execution, then use Storage to prove that no persisted intermediate exists. Open one Job detail page and follow `Associated SQL Query` once; this shows that DataFrame actions appear in the SQL/DataFrame tab. Open one Stage detail page only to learn the layout. For this case, do not focus on GC, spill or locality unless they are extreme. Executors is optional in optimized mode: it may show non-zero storage memory, but the exact value is machine-dependent.
 
+In this case, "repeated stage pattern" means similar stage shapes and task counts appear across several actions over the same lineage. Do not require identical shuffle read/write bytes; those numbers are supporting evidence and can vary.
+
 ## Expected Baseline Symptoms
 
 Repeated stages appear for the same transformation lineage. Storage does not show useful persisted data.

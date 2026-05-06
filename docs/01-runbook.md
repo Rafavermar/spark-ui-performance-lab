@@ -126,12 +126,13 @@ Use this exact loop for every batch case:
 3. Run the baseline command.
 4. Open http://localhost:4040 while the app is paused.
 5. Inspect only the tabs listed for the case.
-6. Press Enter in the terminal.
-7. Open http://localhost:18080.
-8. Find the completed app named "spark-ui-lab | <case_id> | baseline".
-9. Run the optimized command.
-10. Inspect the same UI tabs again.
-11. Open History Server and compare baseline vs optimized.
+6. Use the case evidence checklist below to decide which drilldowns matter.
+7. Press Enter in the terminal.
+8. Open http://localhost:18080.
+9. Find the completed app named "spark-ui-lab | <case_id> | baseline".
+10. Run the optimized command.
+11. Inspect the same UI tabs again.
+12. Open History Server and compare baseline vs optimized.
 ```
 
 Do not compare random tabs. Compare the tabs listed for the case.
@@ -192,7 +193,39 @@ Use Environment and Executors deliberately:
 - Executors is required or important in `07`, `09`, `10` and `13`.
 - Executors is optional in `02`: it can show storage memory after persistence, but Storage is the primary tab.
 
-## 9. Batch Cases
+## 9. Case UI Evidence Checklist
+
+Use this table before taking screenshots. It tells you which exact UI elements matter and how to read values without relying on machine-specific timings.
+
+| Case | Must inspect | UI signals to capture | How to interpret values |
+|---|---|---|---|
+| `01_too_many_actions` | Jobs, Stages | `Completed Jobs`, repeated job group, optional Timeline | Count and repetition matter. Exact durations do not. |
+| `02_recomputation` | Jobs, Stages, Storage | Repeated jobs/stages, skipped stages, Storage empty or populated | Repeated pattern means similar jobs/stages from reused lineage. Shuffle bytes may differ; Storage is the decisive evidence. |
+| `03_shuffle_explosion` | SQL, Stages | `Exchange`, wide grouping keys, shuffle read/write | Shuffle should be visibly present. Compare baseline vs optimized direction, not exact bytes. |
+| `04_broadcast_join` | SQL, Stages, optional Environment | `SortMergeJoin` vs `BroadcastHashJoin`, `Exchange`, broadcast threshold | Join operator is decisive. Shuffle byte reductions are supporting evidence. |
+| `05_data_skew` | Stage detail, SQL, optional Environment | Slowest task, duration percentiles, max task duration, join plan | Uneven task distribution matters. Exact task times vary by machine. |
+| `06_small_files` | Stages, Jobs | Many short tasks, input partition/task count | Task count and tiny-task pattern matter more than duration. |
+| `07_too_few_partitions` | Stages, Executors | Very few tasks, executor task distribution, cores | Underuse is visible when task count is lower than available parallelism. |
+| `08_too_many_partitions` | Stages, Jobs | Many tiny tasks, scheduler delay if visible | Excessive task count is the signal. Scheduler delay is supporting evidence. |
+| `09_spill` | Stage detail, Executors, optional Environment | Spill, peak memory, GC time, long tasks | Spill may depend on laptop resources. If spill is absent, use memory pressure and wide-row plan as supporting evidence. |
+| `10_cache_misuse` | Storage, Executors | Cached data present, storage memory, little reuse | Storage presence is decisive. Exact memory footprint is not portable. |
+| `11_udf_cost` | SQL | UDF expression in Plan Details | Operator/expression presence is decisive, not runtime. |
+| `12_aqe_comparison` | SQL, Stages, optional Environment | `AdaptiveSparkPlan`, initial/final plan, `AQEShuffleRead` | AQE plan evidence is decisive. Stage metrics are supporting evidence. |
+| `13_task_failure_retry` | Jobs, Stage detail, Executors | Failed task attempt, retry, failed task count/logs | Failure/retry presence is decisive. Timing is secondary. |
+| `14_config_validation` | Environment | Spark Properties values | Exact property values are decisive because config is the topic. |
+| `15_structured_streaming_backlog` | Structured Streaming | Batch duration, input rows/sec, processed rows/sec | Baseline should show backlog tendency. Exact rates are machine-dependent. |
+| `16_stateful_streaming` | Structured Streaming | State operator rows, state memory, watermark behavior | State growth/control pattern matters. Exact memory varies. |
+| `17_real_time_mode` | Structured Streaming, optional Environment | Trigger/progress evidence, real-time mode config | Compare trigger mode and progress evidence. Do not claim fixed latency. |
+
+For qualitative value reading:
+
+- `0` vs non-zero is often meaningful, especially Storage, failed tasks and spill.
+- Few vs many tasks is meaningful for partitioning cases.
+- Operator presence is meaningful for SQL cases.
+- Baseline vs optimized direction is meaningful for shuffle, duration, task distribution and streaming rates.
+- Exact milliseconds, KiB/MiB and rows/sec are local observations, not universal expected values.
+
+## 10. Batch Cases
 
 Batch cases `01` to `14` do not require Redpanda.
 
@@ -911,7 +944,7 @@ Code-level fix:
 - The difference comes from `scripts/run-case.sh`, which passes explicit `--conf` values for this optimized mode.
 - The verification happens in the Spark UI Environment tab.
 
-## 10. Streaming Setup
+## 11. Streaming Setup
 
 Streaming cases require Redpanda. Start the streaming profile:
 
@@ -944,7 +977,7 @@ If a streaming case fails because of missing topics or old checkpoints, run:
 ./scripts/produce-streaming-data.sh
 ```
 
-## 11. Streaming Cases
+## 12. Streaming Cases
 
 ### 15_structured_streaming_backlog
 
@@ -1085,7 +1118,7 @@ Code-level advanced mode:
 - It uses `Trigger.RealTime("5 seconds")` for the same stateless Kafka-to-Kafka pattern.
 - `optimized` is accepted as an alias for `advanced`, but the documentation uses `advanced` because this is a Spark 4.1 capability demonstration, not a universal performance fix.
 
-## 12. Metrics Export
+## 13. Metrics Export
 
 After running a case:
 
@@ -1097,7 +1130,7 @@ This writes a minimal History Server REST export to `metrics/`.
 
 The exporter intentionally captures the application index only. Use the app id in the JSON for deeper manual API calls.
 
-## 13. Cleanup
+## 14. Cleanup
 
 Stop containers:
 
@@ -1121,7 +1154,7 @@ Clean generated artifacts:
 
 It does not delete source files.
 
-## 14. When Something Is Confusing
+## 15. When Something Is Confusing
 
 Use this order:
 
