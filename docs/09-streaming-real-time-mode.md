@@ -44,6 +44,8 @@ docker compose --profile streaming stop redpanda
 
 If Redpanda is stopped while a streaming query is running, the query should fail because the Kafka source/sink is unavailable.
 
+Streaming cases are interactive by default. They keep running until Enter is pressed in the terminal. For automated or timed validation runs, use the flags documented in [Spark configuration](08-spark-configuration.md#8-runtime-flags-and-switches), for example `LAB_AUTO_EXIT=true LAB_AUTO_EXIT_WAIT_SECONDS=15`.
+
 ## Inspect Redpanda
 
 List topics:

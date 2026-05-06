@@ -239,7 +239,76 @@ Useful properties to check:
 
 The Environment tab is the source of truth. If a value is not there, do not assume it was applied.
 
-## 8. What Learners Should And Should Not Change
+## 8. Runtime Flags And Switches
+
+This is the central flag map for the lab.
+
+Persistent flags live in `.env`, copied from `.env.example`. Per-run flags are passed before a script command.
+
+Where they are read:
+
+- `scripts/up.sh` and `scripts/up-streaming.sh` load `.env` and decide whether to build locally or pull `SPARK_IMAGE`.
+- `scripts/run-case.sh` reads `LAB_AUTO_EXIT` and `LAB_AUTO_EXIT_WAIT_SECONDS`, then passes them into `spark-client`.
+- `src/main/scala/lab/utils/LabSupport.scala` uses those runtime flags to pause interactively or auto-exit.
+
+| Flag or switch | Where to set it | Default | What it does |
+|---|---|---:|---|
+| `SPARK_VERSION` | `.env` | `4.1.1` | Spark version installed in the Docker image. Do not downgrade silently. |
+| `SPARK_HADOOP_PROFILE` | `.env` | `hadoop3` | Spark distribution profile used in the official download name. |
+| `SCALA_VERSION` | `.env` | `2.13.17` | Scala version used by SBT. |
+| `SBT_VERSION` | `.env` | `1.10.7` | SBT version installed inside the image. |
+| `JAVA_BASE_IMAGE` | `.env` | `eclipse-temurin:17.0.13_11-jdk-jammy` | Java base image used to build the Spark lab image. |
+| `APACHE_SPARK_DIST_BASE_URL` | `.env` | `https://archive.apache.org/dist/spark` | Official Spark distribution base URL used by the Dockerfile. |
+| `SPARK_IMAGE` | `.env` | `spark-ui-performance-lab-spark:4.1.1` | Docker image name used by Compose. Set this to Docker Hub when using a prebuilt image. |
+| `SPARK_USE_PREBUILT_IMAGE` | `.env` | `false` | `false` builds locally; `true` pulls `SPARK_IMAGE` and starts with `--no-build`. |
+| `DOCKERHUB_SPARK_IMAGE` | `.env` | `jrvm/spark-ui-performance-lab-spark:4.1.1` | Image name used by `scripts/publish-dockerhub.sh`. Maintainer-only convenience. |
+| `REDPANDA_IMAGE` | `.env` | `docker.redpanda.com/redpandadata/redpanda:v26.1.5` | Optional broker image used only by the `streaming` profile. |
+| `SPARK_WORKER_CORES` | `.env` | `2` | Cores per worker container. Changes cluster parallelism. |
+| `SPARK_WORKER_MEMORY` | `.env` | `2g` | Memory per worker container. |
+| `SPARK_DRIVER_MEMORY` | `.env` | `1g` | Driver memory for demo jobs. |
+| `SPARK_EXECUTOR_MEMORY` | `.env` | `1g` | Executor memory for demo jobs. |
+| `SPARK_MASTER_URL` | `.env` | `spark://spark-master:7077` | Standalone cluster URL. Normally unchanged. |
+| `SPARK_EVENT_LOG_DIR` | `.env` | `file:/opt/spark-events` | Event log location written by Spark apps. |
+| `SPARK_HISTORY_LOG_DIR` | `.env` | `file:/opt/spark-events` | Event log location read by History Server. |
+| `LAB_AUTO_EXIT` | before `run-case.sh` | unset | `true` makes a case pause briefly and exit automatically. Useful for validation. |
+| `LAB_AUTO_EXIT_WAIT_SECONDS` | before `run-case.sh` | `2` when `LAB_AUTO_EXIT=true` | Seconds to keep the app alive for UI/event evidence before auto-exit. |
+| Docker Compose profile `streaming` | `./scripts/up-streaming.sh` | off | Starts Redpanda in addition to the default Spark services. |
+| Case mode `baseline` | `run-case.sh` argument | required | Runs the problem version. |
+| Case mode `optimized` | `run-case.sh` argument | required | Runs the fixed version where applicable. |
+| Case mode `advanced` | `run-case.sh` argument | only case `17` | Runs Spark 4.1 real-time mode for `17_real_time_mode`. |
+
+Common recipes:
+
+```bash
+# Default path: build the lab image locally.
+SPARK_USE_PREBUILT_IMAGE=false
+./scripts/up.sh
+```
+
+```bash
+# Optional path: use the published Docker Hub image.
+docker pull jrvm/spark-ui-performance-lab-spark:4.1.1
+
+# In .env:
+SPARK_IMAGE=jrvm/spark-ui-performance-lab-spark:4.1.1
+SPARK_USE_PREBUILT_IMAGE=true
+
+./scripts/up.sh
+```
+
+```bash
+# Interactive streaming run: stays alive until Enter is pressed.
+./scripts/run-case.sh 17_real_time_mode advanced
+```
+
+```bash
+# Timed validation run: exits automatically after a short inspection window.
+LAB_AUTO_EXIT=true LAB_AUTO_EXIT_WAIT_SECONDS=15 ./scripts/run-case.sh 17_real_time_mode advanced
+```
+
+In an interactive terminal, streaming cases keep running until the learner presses Enter. In non-interactive execution, `scripts/run-case.sh` automatically sets `LAB_AUTO_EXIT=true` so validation does not hang forever.
+
+## 9. What Learners Should And Should Not Change
 
 For the first pass through the lab:
 

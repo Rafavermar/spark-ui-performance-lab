@@ -113,6 +113,8 @@ For streaming:
 
 The repository is still required because it provides the scripts, source code, docs and mounted workspace.
 
+For the complete list of Docker, Spark and runtime flags, see [Spark configuration guide](docs/08-spark-configuration.md#8-runtime-flags-and-switches).
+
 Maintainers can publish the image with:
 
 ```bash
@@ -134,6 +136,7 @@ docker login
 Streaming cases are [15](docs/cases/15_structured_streaming_backlog.md), [16](docs/cases/16_stateful_streaming.md) and [17](docs/cases/17_real_time_mode.md). Case [17_real_time_mode](docs/cases/17_real_time_mode.md) supports `baseline` and `advanced` modes; `optimized` is accepted as an alias for the advanced mode.
 
 For the Redpanda topic flow and Spark 4.1 real-time mode, see [Streaming and real-time mode](docs/09-streaming-real-time-mode.md).
+For timed vs interactive streaming runs, see [runtime flags](docs/08-spark-configuration.md#8-runtime-flags-and-switches).
 
 ## Stop And Clean
 

@@ -114,7 +114,7 @@ When a case runs:
 
 To see which Scala file is executed for each case, use [Code Execution Map](05-code-execution-map.md).
 
-To understand Spark configuration before running cases, read [Spark Configuration Guide](08-spark-configuration.md). It explains what comes from `.env`, `docker-compose.yml`, `conf/spark-defaults.conf`, `spark-submit` and case-specific Scala overrides.
+To understand Spark configuration before running cases, read [Spark Configuration Guide](08-spark-configuration.md). It explains what comes from `.env`, `docker-compose.yml`, `conf/spark-defaults.conf`, `spark-submit`, case-specific Scala overrides and the [runtime flags](08-spark-configuration.md#8-runtime-flags-and-switches) used for Docker Hub images or timed validation runs.
 
 ## 6. Standard Baseline-To-Optimized Loop
 
