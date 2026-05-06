@@ -1,5 +1,5 @@
 # spark-ui-performance-lab
-![Front.png](docs\assets\spark-ui-map\Front.png)
+![Front.png](docs/assets/spark-ui-map/Front.png)
 
 Public, reproducible Apache Spark performance troubleshooting lab for Data Engineers.
 
