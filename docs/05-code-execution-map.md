@@ -19,6 +19,50 @@ user command
         -> Spark event log is written for History Server
 ```
 
+## How Baseline And Optimized Modes Are Selected
+
+The mode is selected by plain application code, not by Spark itself.
+
+When you run:
+
+```bash
+./scripts/run-case.sh 01_too_many_actions baseline
+```
+
+the script submits:
+
+```text
+lab.Main 01_too_many_actions baseline
+```
+
+Then `src/main/scala/lab/Main.scala` finds the case object by `case_id` and calls:
+
+```scala
+labCase.run(spark, mode)
+```
+
+The common interface in `src/main/scala/lab/cases/LabCase.scala` routes the mode:
+
+```scala
+mode match {
+  case "baseline" => runBaseline(spark)
+  case "optimized" => runOptimized(spark)
+}
+```
+
+So the baseline and the fix live side by side in the Scala object for the case.
+
+Example for `01_too_many_actions`:
+
+```text
+src/main/scala/lab/cases/BatchCasesPart1.scala
+  -> object TooManyActions
+    -> runBaseline   creates repeated actions
+    -> runOptimized  consolidates work into one summary action
+```
+
+This pattern is used across the lab: the baseline creates the Spark UI symptom, and the optimized mode changes code, data layout, Spark configuration or streaming query design to produce different UI evidence.
+
 Data generation follows this path:
 
 ```text
