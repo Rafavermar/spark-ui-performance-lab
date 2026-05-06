@@ -49,7 +49,7 @@ Optional streaming profile:
 - all default services
 - `redpanda`
 
-Redpanda is intentionally optional. Batch cases `01` to `14` run without streaming infrastructure.
+Redpanda is intentionally optional. Batch cases [01](docs/cases/01_too_many_actions.md) to [14](docs/cases/14_config_validation.md) run without streaming infrastructure.
 
 ## Ports
 
@@ -93,7 +93,7 @@ Open the live Spark UI while a case is paused at <http://localhost:4040>. After 
 ./scripts/run-case.sh 15_structured_streaming_backlog optimized
 ```
 
-Streaming cases are `15`, `16` and `17`. Case `17_real_time_mode` supports `baseline` and `advanced` modes; `optimized` is accepted as an alias for the advanced mode.
+Streaming cases are [15](docs/cases/15_structured_streaming_backlog.md), [16](docs/cases/16_stateful_streaming.md) and [17](docs/cases/17_real_time_mode.md). Case [17_real_time_mode](docs/cases/17_real_time_mode.md) supports `baseline` and `advanced` modes; `optimized` is accepted as an alias for the advanced mode.
 
 ## Stop And Clean
 

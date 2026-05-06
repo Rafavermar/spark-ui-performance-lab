@@ -92,7 +92,7 @@ For the full explanation, see [Spark Configuration Guide](08-spark-configuration
 |---|---|
 | `scripts/run-case.sh` | Source-of-truth runner for one case and mode. |
 | `scripts/generate-data.sh` | Generates deterministic local datasets. |
-| `scripts/run-all.sh` | Runs batch cases `01` to `14` only. |
+| `scripts/run-all.sh` | Runs batch cases [01](cases/01_too_many_actions.md) to [14](cases/14_config_validation.md) only. |
 | `scripts/up.sh` | Starts Spark default services without Redpanda. |
 | `scripts/up-streaming.sh` | Starts Spark plus Redpanda with Docker Compose profile `streaming`. |
 | `src/main/scala/lab/Main.scala` | CLI dispatcher: `<case_id> <mode>`. |

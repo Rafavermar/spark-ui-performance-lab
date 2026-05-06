@@ -10,7 +10,7 @@ Shows Spark jobs created by actions. Use it to diagnose repeated actions, failed
 
 ![Jobs tab with event timeline and completed jobs](assets/spark-ui-map/03-jobs-tab-timeline.png)
 
-Cases: `01`, `02`, `06`, `08`, `13`.
+Cases: [01](cases/01_too_many_actions.md), [02](cases/02_recomputation.md), [06](cases/06_small_files.md), [08](cases/08_too_many_partitions.md), [13](cases/13_task_failure_retry.md).
 
 What to read:
 
@@ -32,7 +32,7 @@ Shows stage DAGs, task counts, task duration distribution, shuffle read/write, s
 
 ![Stages tab with task counts and shuffle columns](assets/spark-ui-map/05-stages-table.png)
 
-Cases: `01`, `02`, `03`, `05`, `06`, `07`, `08`, `09`, `12`, `13`.
+Cases: [01](cases/01_too_many_actions.md), [02](cases/02_recomputation.md), [03](cases/03_shuffle_explosion.md), [05](cases/05_data_skew.md), [06](cases/06_small_files.md), [07](cases/07_too_few_partitions.md), [08](cases/08_too_many_partitions.md), [09](cases/09_spill.md), [12](cases/12_aqe_comparison.md), [13](cases/13_task_failure_retry.md).
 
 What to read:
 
@@ -50,7 +50,7 @@ Stage detail metrics:
 - `Shuffle Remote Reads`: evidence that shuffle data came from other executors.
 - `Result Serialization Time` and `Getting Result Time`: driver/result transfer overhead.
 - `Peak Execution Memory`: memory used by execution operators such as sort, aggregate or join.
-- `Memory Spill` and `Disk Spill`: data moved out of memory during execution. These are central in case `09`.
+- `Memory Spill` and `Disk Spill`: data moved out of memory during execution. These are central in [case 09](cases/09_spill.md).
 - `Locality Level`: where the task ran relative to its data. `NODE_LOCAL` means the task ran on the same worker node as the data; in this Docker lab it is usually not the main bottleneck.
 
 ## Storage
@@ -59,7 +59,7 @@ Shows cached or persisted DataFrames/RDDs. Use it to verify whether persistence 
 
 ![Storage tab with a persisted DataFrame](assets/spark-ui-map/09-storage-persisted-optimized.png)
 
-Cases: `02`, `10`.
+Cases: [02](cases/02_recomputation.md), [10](cases/10_cache_misuse.md).
 
 ## Environment
 
@@ -67,7 +67,7 @@ Shows actual Spark properties, JVM information and classpath evidence. Use it to
 
 ![Environment tab with runtime and Spark properties](assets/spark-ui-map/15-environment-runtime-properties.png)
 
-Cases: `14`.
+Cases: [14](cases/14_config_validation.md).
 
 What to read:
 
@@ -84,7 +84,7 @@ Shows executor memory, task totals, failed tasks, shuffle, storage and GC-relate
 
 ![Executors tab with task, storage, shuffle and log links](assets/spark-ui-map/10-executors-summary.png)
 
-Cases: `07`, `09`, `10`, `13`.
+Cases: [07](cases/07_too_few_partitions.md), [09](cases/09_spill.md), [10](cases/10_cache_misuse.md), [13](cases/13_task_failure_retry.md).
 
 What to read:
 
@@ -102,7 +102,7 @@ What to read:
 How to interpret values:
 
 - Exact task time, GC time, storage memory and shuffle bytes are not portable benchmark numbers.
-- Distribution is more important than the exact value. For example, case `07` should show underuse with too few tasks; case `10` should show storage memory when unnecessary cache is used; case `13` should show failed task evidence.
+- Distribution is more important than the exact value. For example, [case 07](cases/07_too_few_partitions.md) should show underuse with too few tasks; [case 10](cases/10_cache_misuse.md) should show storage memory when unnecessary cache is used; [case 13](cases/13_task_failure_retry.md) should show failed task evidence.
 - A small non-zero `Storage Memory` value can appear even when the primary Storage tab has no meaningful cached dataset. Use the Storage tab as the source of truth for persisted DataFrames.
 
 Executor drilldowns:
@@ -136,10 +136,10 @@ When this lab uses Executors:
 
 | Case | Why Executors matters |
 |---|---|
-| `07_too_few_partitions` | Confirm that available cores/workers are underused because there are too few tasks. |
-| `09_spill` | Support spill or memory-pressure diagnosis with GC, task time and executor memory evidence. |
-| `10_cache_misuse` | Support Storage evidence by showing storage memory used by cached data. |
-| `13_task_failure_retry` | Confirm failed task counts and use logs if the controlled failure needs inspection. |
+| [07_too_few_partitions](cases/07_too_few_partitions.md) | Confirm that available cores/workers are underused because there are too few tasks. |
+| [09_spill](cases/09_spill.md) | Support spill or memory-pressure diagnosis with GC, task time and executor memory evidence. |
+| [10_cache_misuse](cases/10_cache_misuse.md) | Support Storage evidence by showing storage memory used by cached data. |
+| [13_task_failure_retry](cases/13_task_failure_retry.md) | Confirm failed task counts and use logs if the controlled failure needs inspection. |
 
 Thread Dump and Heap Histogram are intentionally not required for any default case. They are included as advanced exploration tools after the learner understands the normal Spark UI evidence.
 
@@ -149,7 +149,7 @@ Shows SQL/DataFrame query plans and execution metrics. Use it to inspect Exchang
 
 ![SQL plan visualization with operator metrics](assets/spark-ui-map/13-sql-plan-visualization.png)
 
-Cases: `03`, `04`, `05`, `11`, `12`.
+Cases: [03](cases/03_shuffle_explosion.md), [04](cases/04_broadcast_join.md), [05](cases/05_data_skew.md), [11](cases/11_udf_cost.md), [12](cases/12_aqe_comparison.md).
 
 DataFrame API still appears here. You do not need to write SQL for Spark to create SQL/DataFrame executions.
 
@@ -169,15 +169,15 @@ Useful operators:
 - `Exchange`: shuffle boundary. This is a key signal in shuffle and join cases.
 - `AQEShuffleRead`: Adaptive Query Execution reading an adapted shuffle.
 - `AdaptiveSparkPlan`: AQE is active for the query.
-- `SortMergeJoin`: shuffle join; important in case `04`.
-- `BroadcastHashJoin` and `BroadcastExchange`: broadcast join evidence; important in case `04`.
-- UDF-related expressions: important in case `11`.
+- `SortMergeJoin`: shuffle join; important in [case 04](cases/04_broadcast_join.md).
+- `BroadcastHashJoin` and `BroadcastExchange`: broadcast join evidence; important in [case 04](cases/04_broadcast_join.md).
+- UDF-related expressions: important in [case 11](cases/11_udf_cost.md).
 
 When to use SQL:
 
-- Optional in `01` and `02`: open one query to connect DataFrame actions to SQL plans, but do not over-analyze every operator.
-- Required in `03`, `04`, `05`, `11` and `12`: the physical plan is part of the diagnosis.
-- Helpful in `09`: use it if you want to connect spill or memory pressure to sort/aggregate operators.
+- Optional in [01](cases/01_too_many_actions.md) and [02](cases/02_recomputation.md): open one query to connect DataFrame actions to SQL plans, but do not over-analyze every operator.
+- Required in [03](cases/03_shuffle_explosion.md), [04](cases/04_broadcast_join.md), [05](cases/05_data_skew.md), [11](cases/11_udf_cost.md) and [12](cases/12_aqe_comparison.md): the physical plan is part of the diagnosis.
+- Helpful in [09](cases/09_spill.md): use it if you want to connect spill or memory pressure to sort/aggregate operators.
 
 Plan Details:
 
@@ -189,7 +189,7 @@ Read Plan Visualization first for shape, then Plan Details for exact operator na
 
 Shows streaming query progress, input rows/sec, processed rows/sec, batch duration, state operator metrics and query status.
 
-Cases: `15`, `16`, `17`.
+Cases: [15](cases/15_structured_streaming_backlog.md), [16](cases/16_stateful_streaming.md), [17](cases/17_real_time_mode.md).
 
 ## History Server
 
