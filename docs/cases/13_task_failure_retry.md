@@ -66,4 +66,4 @@ The failure marker is stored under Spark checkpoints and can be reset with `./sc
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/03-spark-ui-evidence-review-prompt.md` with failed task evidence.
+Use [Spark UI evidence review prompt](../ai/03-spark-ui-evidence-review-prompt.md) with failed task evidence.

@@ -2,6 +2,8 @@
 
 This guide helps you capture evidence for articles, talks or internal documentation. It does not include screenshots in the repository.
 
+Use it together with the [Runbook](01-runbook.md), [Spark UI Map](02-spark-ui-map.md) and [Case Catalog](03-case-catalog.md).
+
 ## Capture Rules
 
 - Capture evidence, not decoration.

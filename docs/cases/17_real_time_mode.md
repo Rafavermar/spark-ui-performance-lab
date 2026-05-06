@@ -71,4 +71,4 @@ Use `./scripts/reset-streaming.sh` before rerunning from scratch.
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/02-baseline-vs-optimized-comparison-prompt.md` with Structured Streaming metrics.
+Use [baseline vs optimized comparison prompt](../ai/02-baseline-vs-optimized-comparison-prompt.md) with Structured Streaming metrics.

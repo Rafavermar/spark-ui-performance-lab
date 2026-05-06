@@ -66,4 +66,4 @@ The baseline unpersists after the inspection pause.
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/01-diagnosis-prompt-template.md` with Storage evidence.
+Use [diagnosis prompt template](../ai/01-diagnosis-prompt-template.md) with Storage evidence.

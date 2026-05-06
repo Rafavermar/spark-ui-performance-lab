@@ -70,4 +70,4 @@ The application unpersists after the inspection pause.
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/01-diagnosis-prompt-template.md` with Jobs, Stages and Storage observations.
+Use [diagnosis prompt template](../ai/01-diagnosis-prompt-template.md) with Jobs, Stages and Storage observations.

@@ -15,6 +15,30 @@ CASE_ID="$1"
 MODE="$2"
 APP_JAR="target/scala-2.13/spark-ui-performance-lab-assembly-0.1.0.jar"
 
+case "$MODE" in
+  baseline|optimized|advanced)
+    ;;
+  optmized|optimised)
+    echo "Unsupported mode: $MODE"
+    echo "Did you mean: optimized?"
+    echo "Usage: ./scripts/run-case.sh <case_id> baseline|optimized"
+    echo "Case 17 also accepts: advanced"
+    exit 1
+    ;;
+  *)
+    echo "Unsupported mode: $MODE"
+    echo "Usage: ./scripts/run-case.sh <case_id> baseline|optimized"
+    echo "Case 17 also accepts: advanced"
+    exit 1
+    ;;
+esac
+
+if [ "$MODE" = "advanced" ] && [ "$CASE_ID" != "17_real_time_mode" ]; then
+  echo "Mode 'advanced' is only valid for 17_real_time_mode."
+  echo "Use baseline or optimized for $CASE_ID."
+  exit 1
+fi
+
 if [ ! -f "$APP_JAR" ]; then
   echo "Build artifact not found: $APP_JAR"
   echo "Run ./scripts/build.sh first."

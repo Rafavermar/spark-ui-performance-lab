@@ -66,4 +66,4 @@ Temporary compacted files are written under `tmp/` and removed by `./scripts/cle
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/01-diagnosis-prompt-template.md` with Jobs and Stages observations.
+Use [diagnosis prompt template](../ai/01-diagnosis-prompt-template.md) with Jobs and Stages observations.

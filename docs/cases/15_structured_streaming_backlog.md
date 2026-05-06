@@ -69,4 +69,4 @@ Use `./scripts/reset-streaming.sh` to reset topics and checkpoints.
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/02-baseline-vs-optimized-comparison-prompt.md` with streaming progress metrics.
+Use [baseline vs optimized comparison prompt](../ai/02-baseline-vs-optimized-comparison-prompt.md) with streaming progress metrics.

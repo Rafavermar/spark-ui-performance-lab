@@ -66,4 +66,4 @@ No special cleanup required.
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/01-diagnosis-prompt-template.md` with SQL physical plan evidence.
+Use [diagnosis prompt template](../ai/01-diagnosis-prompt-template.md) with SQL physical plan evidence.

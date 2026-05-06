@@ -84,7 +84,7 @@ Configuration follows this path:
           -> Spark UI Environment tab
 ```
 
-For the full explanation, see `docs/08-spark-configuration.md`.
+For the full explanation, see [Spark Configuration Guide](08-spark-configuration.md).
 
 ## Core Files
 

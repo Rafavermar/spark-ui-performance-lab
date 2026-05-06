@@ -2,6 +2,8 @@
 
 This is the full lab flow at a glance.
 
+![Spark UI Performance Lab execution flow](assets/lab-execution-flow.svg)
+
 ```text
 spark-ui-performance-lab
 |
@@ -59,28 +61,14 @@ spark-ui-performance-lab
     `-- docs/ai/
 ```
 
-## Mermaid Overview
+## Related Docs
 
-```mermaid
-flowchart TD
-  A[Clone repo] --> B[Start default Spark services]
-  B --> C[Build assembly inside spark-client]
-  C --> D[Generate synthetic data]
-  D --> E[Run baseline case]
-  E --> F[Inspect live Spark UI]
-  F --> G[Stop app and open History Server]
-  G --> H[Read diagnosis notes]
-  H --> I[Run optimized case]
-  I --> J[Inspect same UI tabs again]
-  J --> K[Compare baseline vs optimized evidence]
-
-  B --> L{Streaming case?}
-  L -- no --> E
-  L -- yes --> M[Start streaming profile]
-  M --> N[Create Redpanda topics]
-  N --> O[Produce deterministic streaming data]
-  O --> E
-```
+- [Runbook](01-runbook.md)
+- [Spark UI Map](02-spark-ui-map.md)
+- [Case Catalog](03-case-catalog.md)
+- [Code Execution Map](05-code-execution-map.md)
+- [Screenshot Capture Guide](07-screenshot-capture-guide.md)
+- [Spark Configuration Guide](08-spark-configuration.md)
 
 ## Default Batch Flow
 

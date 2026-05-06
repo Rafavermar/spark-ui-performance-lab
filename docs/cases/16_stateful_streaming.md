@@ -69,4 +69,4 @@ Use `./scripts/reset-streaming.sh` before rerunning from scratch.
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/03-spark-ui-evidence-review-prompt.md` with state operator metrics.
+Use [Spark UI evidence review prompt](../ai/03-spark-ui-evidence-review-prompt.md) with state operator metrics.

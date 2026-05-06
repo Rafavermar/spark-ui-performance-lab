@@ -66,4 +66,4 @@ No special cleanup required.
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/02-baseline-vs-optimized-comparison-prompt.md` with SQL plan and shuffle metrics.
+Use [baseline vs optimized comparison prompt](../ai/02-baseline-vs-optimized-comparison-prompt.md) with SQL plan and shuffle metrics.

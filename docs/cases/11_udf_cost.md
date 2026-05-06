@@ -66,4 +66,4 @@ No special cleanup required.
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/01-diagnosis-prompt-template.md` with the SQL plan.
+Use [diagnosis prompt template](../ai/01-diagnosis-prompt-template.md) with the SQL plan.

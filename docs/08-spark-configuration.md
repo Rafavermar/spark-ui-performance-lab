@@ -2,6 +2,8 @@
 
 This page explains exactly where Spark configuration lives in the lab, which settings are global, which settings are changed per case and how to verify the final values in Spark UI.
 
+Use this guide with the [Runbook](01-runbook.md), [Spark UI Map](02-spark-ui-map.md) and [Code Execution Map](05-code-execution-map.md).
+
 The short version:
 
 ```text

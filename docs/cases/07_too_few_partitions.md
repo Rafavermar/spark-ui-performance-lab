@@ -66,4 +66,4 @@ No special cleanup required.
 
 ## Optional AI-Assisted Diagnosis
 
-Use `docs/ai/03-spark-ui-evidence-review-prompt.md` with Executors and Stages evidence.
+Use [Spark UI evidence review prompt](../ai/03-spark-ui-evidence-review-prompt.md) with Executors and Stages evidence.

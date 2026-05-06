@@ -16,6 +16,23 @@ The lab uses `8080`, `8081`, `8082`, `4040`, `18080` and optionally `9092`. Stop
 
 Open Spark History Server at <http://localhost:18080>. Event logs are persisted in the shared `spark-events` volume.
 
+## Unsupported Mode Or Typo
+
+Use only:
+
+```bash
+baseline
+optimized
+```
+
+Case `17_real_time_mode` also accepts:
+
+```bash
+advanced
+```
+
+If you type `optmized` or another typo, `scripts/run-case.sh` stops before `spark-submit` and prints a clear mode error.
+
 ## Git Bash Converts Container Paths On Windows
 
 Symptom:

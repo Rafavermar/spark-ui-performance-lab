@@ -2,6 +2,8 @@
 
 Use this page as the UI vocabulary for the lab. Each case tells you which tabs and drilldowns matter. Do not inspect every metric in every case; Spark UI is useful when you read it with a question in mind.
 
+Spark UI has built-in help in many tables. Hover over column titles such as task time, scheduler delay, shuffle read, spill, storage memory or locality to see a short explanation from Spark itself. Use those hover cards as first-line help while this guide explains how each metric fits the lab cases.
+
 ## Jobs
 
 Shows Spark jobs created by actions. Use it to diagnose repeated actions, failed jobs, retry patterns and jobs that finish too quickly to inspect elsewhere.

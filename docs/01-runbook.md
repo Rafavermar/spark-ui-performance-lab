@@ -122,7 +122,7 @@ Use this exact loop for every batch case:
 
 ```text
 1. Read the case section in this runbook.
-2. Open the source file listed in docs/05-code-execution-map.md.
+2. Open the source file listed in [Code Execution Map](05-code-execution-map.md).
 3. Run the baseline command.
 4. Open http://localhost:4040 while the app is paused.
 5. Inspect only the tabs listed for the case.
