@@ -159,7 +159,40 @@ Common UI terms:
 
 For the detailed UI vocabulary, use [Spark UI Map](02-spark-ui-map.md).
 
-## 8. Batch Cases
+## 8. What Metrics Are Reproducible
+
+The lab is reproducible in behavior, not in exact timing numbers.
+
+Stable evidence should be similar across machines:
+
+- App name, case id and mode.
+- Which tabs matter for the diagnosis.
+- Whether Storage is empty or contains cached data.
+- Whether a plan contains operators such as `Exchange`, `SortMergeJoin`, `BroadcastHashJoin`, `AdaptiveSparkPlan` or UDF expressions.
+- Whether a case creates many jobs, many tasks, too few tasks, failed attempts or state operator metrics.
+- Whether Redpanda is required for streaming cases.
+
+Variable evidence will differ by laptop, Docker resources and JVM warmup:
+
+- Stage duration.
+- Task time.
+- GC time.
+- Shuffle bytes.
+- Spill bytes.
+- Peak memory.
+- Scheduler delay.
+- Exact input/processed rows per second in streaming.
+
+When this runbook says "expected", read it as an expected pattern, not an exact benchmark. Do not publish fixed latency or performance claims from this lab.
+
+Use Environment and Executors deliberately:
+
+- Environment is required in `14_config_validation`.
+- Environment is useful when confirming case-specific config in `03`, `04`, `05`, `09`, `12` and `17`.
+- Executors is required or important in `07`, `09`, `10` and `13`.
+- Executors is optional in `02`: it can show storage memory after persistence, but Storage is the primary tab.
+
+## 9. Batch Cases
 
 Batch cases `01` to `14` do not require Redpanda.
 
@@ -250,6 +283,7 @@ UI drilldown:
 - Open one Job detail page and follow `Associated SQL Query` once. This connects the DataFrame action to the SQL/DataFrame plan.
 - Open one SQL query plan and notice the repeated pattern: source, filter/project, aggregate and shuffle. Do not analyze every operator yet.
 - Open one Stage detail page only to learn the layout. For this case, focus on repeated stages and empty Storage, not on GC, spill or locality.
+- Optional: Executors can show storage memory in optimized mode, but use Storage as the source of truth for persistence.
 
 Expected baseline evidence:
 
@@ -281,6 +315,7 @@ Verify:
 
 - Storage tab shows the persisted DataFrame while the app is paused.
 - Later actions reuse the persisted result.
+- Executors may show non-zero storage memory on the driver or workers. The exact KiB/MiB values are machine-dependent.
 
 Code-level fix:
 
@@ -308,6 +343,7 @@ UI drilldown:
 - Search the plan for `Exchange`.
 - Open the Stages table and compare shuffle read/write.
 - DAG is useful here because shuffle boundaries are part of the lesson.
+- Optional: Environment can confirm the case-specific `spark.sql.shuffle.partitions` value.
 
 Expected baseline evidence:
 
@@ -364,6 +400,7 @@ UI drilldown:
 - In baseline, look for `SortMergeJoin` and `Exchange`.
 - In optimized, look for `BroadcastHashJoin` or `BroadcastExchange`.
 - Use Stages only to confirm shuffle shape changed.
+- Optional: Environment can confirm `spark.sql.autoBroadcastJoinThreshold`.
 
 Expected baseline evidence:
 
@@ -412,6 +449,7 @@ UI drilldown:
 - Sort or scan task duration percentiles and max task duration.
 - Open SQL plan to connect the skew symptom to the join and aggregation.
 - DAG is useful if you want to see where shuffle creates reduce-side tasks.
+- Optional: Environment can confirm AQE/skew-related configuration if you are validating config propagation.
 
 Expected baseline evidence:
 
@@ -607,6 +645,7 @@ UI drilldown:
 - Look for memory spill, disk spill, peak execution memory, GC time and long task durations.
 - Executors tab helps confirm memory/GC pressure.
 - SQL plan is optional unless you want to connect pressure to sort/aggregate operators.
+- Optional: Environment can confirm the case-specific shuffle partition value.
 
 Expected baseline evidence:
 
@@ -748,6 +787,7 @@ UI drilldown:
 - Compare initial/final adaptive plan evidence.
 - Look for `AdaptiveSparkPlan` and `AQEShuffleRead`.
 - Stages help confirm shuffle adaptation, but the SQL plan is the primary evidence.
+- Optional: Environment can confirm whether `spark.sql.adaptive.enabled` was set for that run.
 
 Expected baseline evidence:
 
@@ -842,6 +882,7 @@ UI drilldown:
 - Required: Environment tab, Spark Properties section.
 - Compare printed terminal config with UI values.
 - Jobs, Stages, SQL and DAG are not part of the diagnosis here.
+- Executors is optional only to confirm the app ran on the expected workers; it is not the configuration source of truth.
 
 Expected baseline evidence:
 
@@ -870,7 +911,7 @@ Code-level fix:
 - The difference comes from `scripts/run-case.sh`, which passes explicit `--conf` values for this optimized mode.
 - The verification happens in the Spark UI Environment tab.
 
-## 9. Streaming Setup
+## 10. Streaming Setup
 
 Streaming cases require Redpanda. Start the streaming profile:
 
@@ -903,7 +944,7 @@ If a streaming case fails because of missing topics or old checkpoints, run:
 ./scripts/produce-streaming-data.sh
 ```
 
-## 10. Streaming Cases
+## 11. Streaming Cases
 
 ### 15_structured_streaming_backlog
 
@@ -1019,6 +1060,7 @@ UI drilldown:
 - Required: Structured Streaming query progress and trigger evidence.
 - Compare micro-batch baseline with real-time advanced mode.
 - Do not use this case to claim fixed latency.
+- Optional: Environment can confirm real-time mode configuration.
 
 Code-level baseline:
 
@@ -1043,7 +1085,7 @@ Code-level advanced mode:
 - It uses `Trigger.RealTime("5 seconds")` for the same stateless Kafka-to-Kafka pattern.
 - `optimized` is accepted as an alias for `advanced`, but the documentation uses `advanced` because this is a Spark 4.1 capability demonstration, not a universal performance fix.
 
-## 11. Metrics Export
+## 12. Metrics Export
 
 After running a case:
 
@@ -1055,7 +1097,7 @@ This writes a minimal History Server REST export to `metrics/`.
 
 The exporter intentionally captures the application index only. Use the app id in the JSON for deeper manual API calls.
 
-## 12. Cleanup
+## 13. Cleanup
 
 Stop containers:
 
@@ -1079,7 +1121,7 @@ Clean generated artifacts:
 
 It does not delete source files.
 
-## 13. When Something Is Confusing
+## 14. When Something Is Confusing
 
 Use this order:
 

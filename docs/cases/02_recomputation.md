@@ -20,7 +20,7 @@ Jobs, Stages and Storage.
 
 ## UI Drilldown
 
-Use Jobs and Stages to see repeated execution, then use Storage to prove that no persisted intermediate exists. Open one Job detail page and follow `Associated SQL Query` once; this shows that DataFrame actions appear in the SQL/DataFrame tab. Open one Stage detail page only to learn the layout. For this case, do not focus on GC, spill or locality unless they are extreme.
+Use Jobs and Stages to see repeated execution, then use Storage to prove that no persisted intermediate exists. Open one Job detail page and follow `Associated SQL Query` once; this shows that DataFrame actions appear in the SQL/DataFrame tab. Open one Stage detail page only to learn the layout. For this case, do not focus on GC, spill or locality unless they are extreme. Executors is optional in optimized mode: it may show non-zero storage memory, but the exact value is machine-dependent.
 
 ## Expected Baseline Symptoms
 
@@ -57,6 +57,8 @@ Persist only the reused intermediate DataFrame, materialize it with an action an
 ## How To Verify Improvement
 
 Compare repeated stage patterns and check the Storage tab in the optimized run.
+
+Expected values are patterns, not exact numbers: optimized should show a persisted dataset in Storage while the app is paused, but storage memory, task time, GC time and shuffle bytes can differ by machine.
 
 ## Cleanup Notes
 

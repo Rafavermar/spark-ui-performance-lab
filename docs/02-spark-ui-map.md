@@ -65,6 +65,23 @@ Shows executor memory, task totals, failed tasks, shuffle, storage and GC-relate
 
 Cases: `07`, `09`, `10`, `13`.
 
+What to read:
+
+- `Cores`: available parallelism per executor.
+- `Active Tasks`: currently running tasks while the app is live.
+- `Complete Tasks` and `Total Tasks`: whether work was distributed across executors.
+- `Failed Tasks`: retry/failure evidence.
+- `Task Time (GC Time)`: total executor task time and the portion spent in garbage collection.
+- `Storage Memory`: cached/persisted data footprint. Use this with the Storage tab.
+- `Shuffle Read` and `Shuffle Write`: executor-level data movement.
+- `Logs`: useful when a task fails and you need stdout/stderr.
+
+How to interpret values:
+
+- Exact task time, GC time, storage memory and shuffle bytes are not portable benchmark numbers.
+- Distribution is more important than the exact value. For example, case `07` should show underuse with too few tasks; case `10` should show storage memory when unnecessary cache is used; case `13` should show failed task evidence.
+- A small non-zero `Storage Memory` value can appear even when the primary Storage tab has no meaningful cached dataset. Use the Storage tab as the source of truth for persisted DataFrames.
+
 ## SQL
 
 Shows SQL/DataFrame query plans and execution metrics. Use it to inspect Exchange, SortMergeJoin, BroadcastHashJoin, AdaptiveSparkPlan, UDF expressions and physical plan shape.
@@ -114,6 +131,30 @@ All cases write event logs to the shared `spark-events` Docker volume.
 ## REST API Metrics
 
 `./scripts/export-metrics.sh <case_id> <mode>` exports the History Server applications REST index to `metrics/`. This is intentionally minimal; use the exported app id for deeper manual REST calls if needed.
+
+## Reproducibility Of Metrics
+
+This lab is designed to reproduce the same diagnosis flow, not the same exact numbers.
+
+Stable across machines:
+
+- Case and mode names.
+- Required UI tabs.
+- Presence or absence of important operators.
+- Relative patterns such as fewer jobs, fewer tasks, visible cache, broadcast join, failed retry, state metrics or AQE evidence.
+
+Variable across machines:
+
+- Duration.
+- Task time.
+- GC time.
+- Scheduler delay.
+- Shuffle byte counts.
+- Spill byte counts.
+- Peak memory.
+- Streaming rows/sec.
+
+Use exact numbers only as local evidence for your own run. In public documentation or screenshots, describe patterns such as "more jobs than optimized", "Storage tab contains the persisted DataFrame" or "baseline has many more tiny tasks" instead of claiming universal timings.
 
 ## Drilldown Rules
 
