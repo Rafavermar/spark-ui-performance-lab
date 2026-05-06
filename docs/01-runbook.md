@@ -114,6 +114,8 @@ When a case runs:
 
 To see which Scala file is executed for each case, use [Code Execution Map](05-code-execution-map.md).
 
+To understand Spark configuration before running cases, read [Spark Configuration Guide](08-spark-configuration.md). It explains what comes from `.env`, `docker-compose.yml`, `conf/spark-defaults.conf`, `spark-submit` and case-specific Scala overrides.
+
 ## 6. Standard Baseline-To-Optimized Loop
 
 Use this exact loop for every batch case:

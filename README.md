@@ -133,4 +133,5 @@ The goal is to learn Spark UI diagnosis first. The prompt templates help learner
 - [Code execution map](docs/05-code-execution-map.md)
 - [Lab flow tree](docs/06-lab-flow-tree.md)
 - [Screenshot capture guide](docs/07-screenshot-capture-guide.md)
+- [Spark configuration guide](docs/08-spark-configuration.md)
 - [Why AI is documentation-only](docs/ai/00-why-ai-is-documentation-only.md)

@@ -37,6 +37,8 @@ If the live UI is missed, open the same execution in Spark History Server.
 
 Before reading or changing a case, open [Code Execution Map](05-code-execution-map.md) to see the exact Scala object and source file that runs. For the complete visual flow, use [Lab Flow Tree](06-lab-flow-tree.md).
 
+If Spark configuration feels unclear, read [Spark Configuration Guide](08-spark-configuration.md) before running cases. It explains what is set globally, what is passed by scripts and what each case overrides.
+
 ## Streaming Minimal Path
 
 ```bash

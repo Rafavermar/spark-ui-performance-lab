@@ -29,6 +29,19 @@ Data generation follows this path:
         -> writes deterministic datasets under data/generated/
 ```
 
+Configuration follows this path:
+
+```text
+.env / .env.example
+  -> docker-compose.yml
+    -> conf/spark-defaults.conf
+      -> scripts/run-case.sh spark-submit --conf values
+        -> case-specific spark.conf.set(...) values
+          -> Spark UI Environment tab
+```
+
+For the full explanation, see `docs/08-spark-configuration.md`.
+
 ## Core Files
 
 | File | Role |
