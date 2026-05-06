@@ -22,6 +22,10 @@ Jobs, Stages and Executors.
 
 Use Jobs and Stages detail pages to find the failed task attempt and retry. Event Timeline is useful because retry timing is visible. Executors helps confirm failed task counts and provides log links.
 
+## Evidence Interpretation
+
+The signal is failure followed by successful retry. Exact timing is irrelevant; look for failed task attempt evidence in Jobs/Stages and a final successful application.
+
 ## Expected Baseline Symptoms
 
 One task attempt fails and a retry succeeds.

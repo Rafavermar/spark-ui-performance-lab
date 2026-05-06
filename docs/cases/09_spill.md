@@ -22,6 +22,10 @@ Stages and Executors.
 
 Use Stage detail metrics as the main evidence: memory spill, disk spill, peak execution memory, GC time and long task duration. Executors helps confirm memory or GC pressure. SQL is optional unless you want to connect pressure to sort/aggregate operators.
 
+## Evidence Interpretation
+
+Spill bytes are strong evidence when they appear, but they can vary with Docker memory and host resources. If spill is low or absent, use wide rows, low partition count, peak memory, GC and longer tasks as supporting evidence.
+
 ## Expected Baseline Symptoms
 
 Look for memory spill, disk spill, long task times or executor memory pressure. Spill visibility depends on machine resources.

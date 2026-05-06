@@ -22,6 +22,10 @@ Stages task table and SQL.
 
 Open the slowest Stage detail page. Compare task duration percentiles and max duration; this is where skew becomes visible. Use SQL to connect the symptom to the join and aggregation shape.
 
+## Evidence Interpretation
+
+The signal is uneven task distribution: most tasks finish much earlier than the slowest task. Exact durations are machine-dependent; compare the spread between median/75th percentile and max task duration.
+
 ## Expected Baseline Symptoms
 
 Task duration distribution is uneven, with one or a few tasks much slower.

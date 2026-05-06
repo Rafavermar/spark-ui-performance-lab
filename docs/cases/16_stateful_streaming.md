@@ -25,6 +25,10 @@ Structured Streaming state operator metrics.
 
 Use state operator metrics as the primary evidence: state rows, memory used by state and batch progress. SQL plan details are secondary for this case.
 
+## Evidence Interpretation
+
+The signal is state growth and whether state is bounded by watermark/window design. Exact state memory varies; state rows and watermark behavior are the main evidence.
+
 ## Expected Baseline Symptoms
 
 State rows accumulate for a wide window with no watermark.

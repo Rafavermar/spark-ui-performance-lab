@@ -25,6 +25,10 @@ Structured Streaming.
 
 Use Structured Streaming query progress and trigger evidence. Compare micro-batch baseline with advanced real-time mode. Do not use this case to claim fixed latency numbers.
 
+## Evidence Interpretation
+
+The signal is execution mode and query progress evidence. This is a feature comparison, not a benchmark; do not interpret exact latency or rows/sec as universal.
+
 ## Expected Baseline Symptoms
 
 The query uses regular micro-batch processing with Kafka source and sink.

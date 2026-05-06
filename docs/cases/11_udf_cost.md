@@ -22,6 +22,10 @@ SQL.
 
 Open SQL Plan Details and search for UDF-related expressions. In optimized mode, confirm that the labeling logic appears as native conditional expressions. Stage metrics are secondary.
 
+## Evidence Interpretation
+
+The signal is operator/expression presence in the SQL plan, not runtime. Baseline should expose UDF-related execution; optimized should use built-in expressions that Catalyst can represent directly.
+
 ## Expected Baseline Symptoms
 
 The physical plan includes UDF-related expressions.

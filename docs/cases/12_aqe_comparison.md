@@ -22,6 +22,10 @@ SQL and Stages.
 
 Use SQL Plan Visualization and Plan Details as the primary evidence. Look for `AdaptiveSparkPlan`, initial/final plan sections and `AQEShuffleRead`. Use Stages to confirm shuffle behavior changed.
 
+## Evidence Interpretation
+
+The signal is adaptive plan evidence, not a fixed speedup. Compare plan structure and shuffle adaptation markers; stage counts and durations are supporting evidence.
+
 ## Expected Baseline Symptoms
 
 The plan is non-adaptive and uses the configured shuffle partitions directly.

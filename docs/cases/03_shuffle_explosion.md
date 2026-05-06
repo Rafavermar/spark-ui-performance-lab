@@ -22,6 +22,10 @@ SQL and Stages.
 
 Open the SQL query, Plan Visualization and Plan Details. Search for `Exchange`, then compare shuffle read/write in Stages. DAG inspection is useful here because shuffle boundaries are the lesson.
 
+## Evidence Interpretation
+
+The decisive signal is physical plan shape: wide grouping before projection/filtering and visible `Exchange` operators. Shuffle read/write values should move in the right direction after optimization, but exact bytes depend on execution details.
+
 ## Expected Baseline Symptoms
 
 The SQL plan shows Exchange operators. Stages show shuffle read/write for wide rows that include payload columns.

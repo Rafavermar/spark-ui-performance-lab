@@ -22,6 +22,10 @@ Environment.
 
 Use only the Environment tab, especially Spark Properties. Compare those values with terminal output. Jobs, Stages, SQL and DAG are intentionally not part of this diagnosis.
 
+## Evidence Interpretation
+
+The signal is exact configuration value, not performance behavior. Environment is the source of truth for active Spark properties in this case.
+
 ## Expected Baseline Symptoms
 
 The printed configuration should match Spark Properties in the Environment tab.

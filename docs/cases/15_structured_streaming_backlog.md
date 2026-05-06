@@ -25,6 +25,10 @@ Structured Streaming.
 
 Use Structured Streaming query progress: batch duration, input rows/sec and processed rows/sec. Jobs and Stages are secondary unless a specific micro-batch needs debugging.
 
+## Evidence Interpretation
+
+The signal is backlog tendency: processing takes longer than the trigger cadence or processed rows/sec lags input rows/sec. Exact rates depend on host resources and Kafka/Redpanda timing.
+
 ## Expected Baseline Symptoms
 
 Batch duration is intentionally slower than the trigger interval because the query adds processing delay.

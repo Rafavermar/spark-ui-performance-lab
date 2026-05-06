@@ -22,6 +22,10 @@ SQL and Stages.
 
 Use Plan Details as the primary evidence. In baseline, look for `SortMergeJoin` and `Exchange`. In optimized, look for `BroadcastHashJoin` or `BroadcastExchange`. Stages confirm whether shuffle work changed.
 
+## Evidence Interpretation
+
+The join operator is the decisive evidence. Baseline should show shuffle join behavior, while optimized should show broadcast evidence. Shuffle byte changes are useful but secondary.
+
 ## Expected Baseline Symptoms
 
 The physical plan shows SortMergeJoin and Exchange operators.

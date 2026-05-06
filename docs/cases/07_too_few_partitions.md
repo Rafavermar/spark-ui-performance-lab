@@ -22,6 +22,10 @@ Executors and Stages.
 
 Use Stages for task count and Executors for task activity per executor. The key question is whether there is enough parallel work to use the cluster. DAG and SQL plan details are secondary.
 
+## Evidence Interpretation
+
+The signal is too little parallel work. If task count is lower than available cores or concentrated on too few executors, the cluster is underused. Exact runtime is not the main evidence.
+
 ## Expected Baseline Symptoms
 
 Very few tasks appear, and executor utilization is low.

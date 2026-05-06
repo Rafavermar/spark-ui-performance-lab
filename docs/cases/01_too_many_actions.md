@@ -22,6 +22,10 @@ Jobs and Stages.
 
 Use the Jobs table as the primary evidence. The Event Timeline is optional and helps show that several actions created separate jobs. Open one DAG only if you want to see similar lineage repeated; detailed stage metrics are introduced later.
 
+## Evidence Interpretation
+
+The signal is job count and repeated action pattern, not task duration. Skipped stages can appear because Spark reuses completed stage output inside the same application; they do not invalidate the diagnosis.
+
 ## Expected Baseline Symptoms
 
 Several jobs appear for `count`, filtered `count`, grouped `count` and aggregate actions.
