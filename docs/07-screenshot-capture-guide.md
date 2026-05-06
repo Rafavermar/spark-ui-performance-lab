@@ -174,6 +174,41 @@ Capture:
 
 - Same Structured Streaming metrics for comparison.
 
+### Case 17: Real-Time Mode
+
+Setup:
+
+```bash
+./scripts/up-streaming.sh
+./scripts/create-topics.sh
+./scripts/produce-streaming-data.sh
+```
+
+Baseline:
+
+```bash
+./scripts/run-case.sh 17_real_time_mode baseline
+```
+
+Capture:
+
+- Structured Streaming tab while the micro-batch query is active.
+- Query name `case17_micro_batch_baseline`.
+- Trigger/progress table with input rows/sec, processed rows/sec and batch duration.
+
+Advanced:
+
+```bash
+./scripts/run-case.sh 17_real_time_mode advanced
+```
+
+Capture:
+
+- Structured Streaming tab while the real-time query is active.
+- Query name `case17_real_time_advanced`.
+- Any trigger/progress evidence visible in the query detail page.
+- Optional Environment tab showing real-time mode config.
+
 ## Recommended Walkthrough Sequence
 
 1. Spark Master UI: cluster is real and reproducible.

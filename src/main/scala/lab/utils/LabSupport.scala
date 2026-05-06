@@ -41,8 +41,13 @@ object UiPrinter {
   def pauseForInspection(): Unit = {
     val autoExit = sys.env.get("LAB_AUTO_EXIT").exists(_.equalsIgnoreCase("true"))
     if (autoExit) {
-      println("LAB_AUTO_EXIT=true, waiting briefly for event log flush.")
-      Thread.sleep(2000L)
+      val waitSeconds = sys.env
+        .get("LAB_AUTO_EXIT_WAIT_SECONDS")
+        .flatMap(value => value.toIntOption)
+        .filter(_ > 0)
+        .getOrElse(2)
+      println(s"LAB_AUTO_EXIT=true, waiting $waitSeconds second(s) for UI/event evidence.")
+      Thread.sleep(waitSeconds * 1000L)
     } else if (System.console() != null) {
       println("Inspect the live Spark UI now. Press Enter to stop the application.")
       scala.io.StdIn.readLine()

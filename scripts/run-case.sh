@@ -62,6 +62,9 @@ fi
 ENV_ARGS=()
 if [ "${LAB_AUTO_EXIT:-}" = "true" ] || [ ! -t 0 ]; then
   ENV_ARGS=(-e LAB_AUTO_EXIT=true)
+  if [ -n "${LAB_AUTO_EXIT_WAIT_SECONDS:-}" ]; then
+    ENV_ARGS+=(-e "LAB_AUTO_EXIT_WAIT_SECONDS=${LAB_AUTO_EXIT_WAIT_SECONDS}")
+  fi
 fi
 
 EXTRA_CONF=()

@@ -980,6 +980,8 @@ If a streaming case fails because of missing topics or old checkpoints, run:
 ./scripts/produce-streaming-data.sh
 ```
 
+When you stop a streaming case, Spark may print cancellation warnings for the batch that was running at shutdown. If this happens after `Stopping streaming query` and the script exits normally, use the Spark UI evidence and History Server entry as the source of truth. See [Troubleshooting](04-troubleshooting.md#streaming-query-prints-cancellation-warnings-on-stop).
+
 ## 12. Streaming Cases (15-17)
 
 ### 15_structured_streaming_backlog
@@ -1114,6 +1116,7 @@ Code-level baseline:
 
 - The advanced run uses Spark 4.1 real-time trigger where supported.
 - Do not claim fixed latency. Compare query progress evidence only.
+- If shutdown prints Kafka sink or task cancellation warnings after `Stopping streaming query`, treat them as controlled shutdown noise unless the script exits with an error.
 
 Code-level advanced mode:
 

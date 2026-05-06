@@ -45,6 +45,20 @@ Then rerun the case. Old completed applications in History Server can still cont
 
 Open Spark History Server at <http://localhost:18080>. Event logs are persisted in the shared `spark-events` volume.
 
+For automated validation, the scripts can run with:
+
+```bash
+LAB_AUTO_EXIT=true ./scripts/run-case.sh 01_too_many_actions baseline
+```
+
+Streaming cases may need more time to produce visible Structured Streaming evidence:
+
+```bash
+LAB_AUTO_EXIT=true LAB_AUTO_EXIT_WAIT_SECONDS=12 ./scripts/run-case.sh 17_real_time_mode advanced
+```
+
+Do not use `LAB_AUTO_EXIT=true` for manual UI learning. Run the case normally so the application stays alive until you press Enter.
+
 ## Unsupported Mode Or Typo
 
 Use only:
@@ -128,6 +142,25 @@ Use:
 ```
 
 This deletes and recreates streaming topics and removes streaming checkpoints.
+
+## Streaming Query Prints Cancellation Warnings On Stop
+
+When you stop a live Structured Streaming query, Spark can cancel the batch that is currently running. The terminal may show messages such as:
+
+```text
+TaskKilled
+Job cancelled
+MicroBatchWrite ... is aborting
+Could not find CoarseGrainedScheduler
+```
+
+These messages are expected if they appear after the lab prints `Stopping streaming query` and the script exits with status `0`. They mean the live query was interrupted during shutdown, not that the case failed.
+
+Treat it as a failure only when:
+
+- `scripts/run-case.sh` exits non-zero.
+- The query never appears in the Structured Streaming tab.
+- Redpanda/topic/checkpoint errors appear before the query starts.
 
 ## Reset Generated Data
 
