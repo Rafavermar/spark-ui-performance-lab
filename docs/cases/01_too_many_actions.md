@@ -22,9 +22,13 @@ Jobs and Stages.
 
 Several jobs appear for `count`, filtered `count`, grouped `count` and aggregate actions.
 
+Some stages may be marked as skipped because Spark can reuse already completed stage output inside the same application. The key symptom is still visible: one logical case execution created multiple Spark jobs.
+
 ## Diagnosis Explanation
 
 The issue is not a single slow transformation; it is repeated actions over similar lineage.
+
+For this introductory case, focus first on the Jobs tab and job count. The DAG is optional; it can help show repeated lineage, but deeper DAG analysis is introduced in later shuffle and join cases.
 
 ## Optimized Command
 

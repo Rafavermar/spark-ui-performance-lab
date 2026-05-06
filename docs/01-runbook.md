@@ -159,11 +159,16 @@ Expected baseline evidence:
 
 - Several jobs appear for separate actions.
 - The terminal prints several independent action results.
+- In the Jobs tab, `Completed Jobs` should be greater than one for this single case execution.
+- In the Stages tab, several completed stages appear because each action creates its own Spark job path.
+- Some stages may appear as skipped because Spark can reuse already completed shuffle/map stage output inside the same application. That is still useful evidence: the repeated actions are visible as repeated jobs.
 
 Diagnosis:
 
 - Multiple actions are executed over similar lineage.
 - Each action can trigger its own Spark job.
+- For this first case, the important evidence is the number of jobs and repeated action pattern. You do not need to deeply inspect the DAG yet.
+- Optional: open a job or stage DAG to see that Spark is repeatedly walking similar lineage. Detailed DAG reading becomes more important in shuffle, join and skew cases.
 
 Optimized:
 

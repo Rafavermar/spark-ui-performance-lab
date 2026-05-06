@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="760" viewBox="0 0 1180 760" role="img" aria-labelledby="title desc">
+  <title id="title">Spark UI Performance Lab execution flow</title>
+  <desc id="desc">Diagram showing how shell commands, Docker services, Spark configuration, Scala cases and Spark UI evidence connect in the lab.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .box { fill: #eef6ff; stroke: #2563eb; stroke-width: 1.5; }
+      .box2 { fill: #f0fdf4; stroke: #16a34a; stroke-width: 1.5; }
+      .box3 { fill: #fff7ed; stroke: #ea580c; stroke-width: 1.5; }
+      .box4 { fill: #f5f3ff; stroke: #7c3aed; stroke-width: 1.5; }
+      .text { fill: #0f172a; font-family: Arial, Helvetica, sans-serif; font-size: 15px; }
+      .small { fill: #334155; font-family: Arial, Helvetica, sans-serif; font-size: 12px; }
+      .title { fill: #0f172a; font-family: Arial, Helvetica, sans-serif; font-size: 24px; font-weight: 700; }
+      .section { fill: #0f172a; font-family: Arial, Helvetica, sans-serif; font-size: 17px; font-weight: 700; }
+      .arrow { stroke: #475569; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .dash { stroke: #64748b; stroke-width: 1.5; fill: none; stroke-dasharray: 5 5; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1180" height="760"/>
+  <text class="title" x="40" y="44">Spark UI Performance Lab: execution and evidence flow</text>
+  <text class="small" x="40" y="68">Read left to right: command -> container -> Scala dispatcher -> case mode -> Spark UI evidence.</text>
+
+  <rect class="panel" x="30" y="95" width="240" height="610" rx="8"/>
+  <text class="section" x="55" y="128">1. User commands</text>
+  <rect class="box" x="55" y="155" width="190" height="58" rx="6"/>
+  <text class="text" x="75" y="180">./scripts/up.sh</text>
+  <text class="small" x="75" y="199">default Spark services</text>
+  <rect class="box" x="55" y="235" width="190" height="58" rx="6"/>
+  <text class="text" x="75" y="260">./scripts/build.sh</text>
+  <text class="small" x="75" y="279">sbt clean assembly</text>
+  <rect class="box" x="55" y="315" width="190" height="58" rx="6"/>
+  <text class="text" x="75" y="340">generate-data.sh</text>
+  <text class="small" x="75" y="359">synthetic datasets</text>
+  <rect class="box" x="55" y="395" width="190" height="72" rx="6"/>
+  <text class="text" x="75" y="420">run-case.sh</text>
+  <text class="small" x="75" y="439">&lt;case_id&gt; baseline</text>
+  <text class="small" x="75" y="456">&lt;case_id&gt; optimized</text>
+  <rect class="box" x="55" y="490" width="190" height="58" rx="6"/>
+  <text class="text" x="75" y="515">up-streaming.sh</text>
+  <text class="small" x="75" y="534">optional Redpanda</text>
+
+  <rect class="panel" x="310" y="95" width="240" height="610" rx="8"/>
+  <text class="section" x="335" y="128">2. Docker layer</text>
+  <rect class="box2" x="335" y="155" width="190" height="70" rx="6"/>
+  <text class="text" x="355" y="181">spark-master</text>
+  <text class="small" x="355" y="201">Master UI :8080</text>
+  <rect class="box2" x="335" y="247" width="190" height="86" rx="6"/>
+  <text class="text" x="355" y="273">spark workers</text>
+  <text class="small" x="355" y="293">2 workers</text>
+  <text class="small" x="355" y="310">4 total cores</text>
+  <rect class="box2" x="335" y="355" width="190" height="70" rx="6"/>
+  <text class="text" x="355" y="381">spark-client</text>
+  <text class="small" x="355" y="401">spark-submit + UI :4040</text>
+  <rect class="box2" x="335" y="447" width="190" height="70" rx="6"/>
+  <text class="text" x="355" y="473">history-server</text>
+  <text class="small" x="355" y="493">History UI :18080</text>
+  <rect class="box2" x="335" y="540" width="190" height="70" rx="6"/>
+  <text class="text" x="355" y="566">redpanda</text>
+  <text class="small" x="355" y="586">streaming profile only</text>
+
+  <rect class="panel" x="590" y="95" width="250" height="610" rx="8"/>
+  <text class="section" x="615" y="128">3. Application layer</text>
+  <rect class="box3" x="615" y="155" width="200" height="66" rx="6"/>
+  <text class="text" x="635" y="181">lab.Main</text>
+  <text class="small" x="635" y="201">dispatches case_id + mode</text>
+  <rect class="box3" x="615" y="250" width="200" height="72" rx="6"/>
+  <text class="text" x="635" y="276">LabCase.run</text>
+  <text class="small" x="635" y="295">baseline -> runBaseline</text>
+  <text class="small" x="635" y="312">optimized -> runOptimized</text>
+  <rect class="box3" x="615" y="352" width="200" height="82" rx="6"/>
+  <text class="text" x="635" y="378">case object</text>
+  <text class="small" x="635" y="397">BatchCasesPart1/2.scala</text>
+  <text class="small" x="635" y="414">StreamingCases.scala</text>
+  <rect class="box3" x="615" y="464" width="200" height="72" rx="6"/>
+  <text class="text" x="635" y="490">SyntheticData</text>
+  <text class="small" x="635" y="509">data/generated/*</text>
+  <rect class="box3" x="615" y="566" width="200" height="72" rx="6"/>
+  <text class="text" x="635" y="592">case overrides</text>
+  <text class="small" x="635" y="611">code, config, layout</text>
+
+  <rect class="panel" x="880" y="95" width="260" height="610" rx="8"/>
+  <text class="section" x="905" y="128">4. Evidence layer</text>
+  <rect class="box4" x="905" y="155" width="205" height="70" rx="6"/>
+  <text class="text" x="925" y="181">Jobs tab</text>
+  <text class="small" x="925" y="201">actions, retries, job count</text>
+  <rect class="box4" x="905" y="247" width="205" height="70" rx="6"/>
+  <text class="text" x="925" y="273">Stages tab</text>
+  <text class="small" x="925" y="293">tasks, shuffle, spill, skew</text>
+  <rect class="box4" x="905" y="339" width="205" height="70" rx="6"/>
+  <text class="text" x="925" y="365">SQL tab</text>
+  <text class="small" x="925" y="385">plans, Exchange, joins, AQE</text>
+  <rect class="box4" x="905" y="431" width="205" height="70" rx="6"/>
+  <text class="text" x="925" y="457">Storage / Executors</text>
+  <text class="small" x="925" y="477">cache, memory, task totals</text>
+  <rect class="box4" x="905" y="523" width="205" height="70" rx="6"/>
+  <text class="text" x="925" y="549">Environment tab</text>
+  <text class="small" x="925" y="569">actual Spark properties</text>
+  <rect class="box4" x="905" y="615" width="205" height="56" rx="6"/>
+  <text class="text" x="925" y="642">History Server</text>
+  <text class="small" x="925" y="660">completed event logs</text>
+
+  <path class="arrow" d="M245 424 C275 424 285 390 335 390"/>
+  <path class="arrow" d="M525 390 C555 390 570 188 615 188"/>
+  <path class="arrow" d="M815 286 C850 286 860 190 905 190"/>
+  <path class="arrow" d="M815 393 C850 393 860 282 905 282"/>
+  <path class="arrow" d="M815 393 C850 393 860 374 905 374"/>
+  <path class="arrow" d="M815 602 C850 602 860 558 905 558"/>
+  <path class="dash" d="M525 482 C565 482 570 602 615 602"/>
+  <path class="dash" d="M1010 615 C1010 705 430 730 430 517"/>
+
+  <text class="small" x="55" y="682">Configuration layers: .env -> docker-compose.yml -> conf/spark-defaults.conf -> spark-submit --conf -> spark.conf.set(...)</text>
+</svg>

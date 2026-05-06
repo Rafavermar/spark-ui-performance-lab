@@ -145,3 +145,7 @@ Streaming cases require Redpanda:
 6. Read `runOptimized`.
 7. Run the optimized command.
 8. Compare the same tabs again.
+
+## Visual Dependency Map
+
+![Spark UI Performance Lab execution flow](assets/lab-execution-flow.svg)
