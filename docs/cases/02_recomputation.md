@@ -50,6 +50,8 @@ The DataFrame is reused by several actions, but Spark has no stored intermediate
 
 The Storage tab shows a persisted DataFrame during inspection, and later actions reuse it.
 
+Do not expect fewer jobs as the main improvement. The optimized version deliberately materializes the persisted DataFrame with an action, so job count can remain similar or even be slightly higher.
+
 ## Explanation Of The Fix
 
 Persist only the reused intermediate DataFrame, materialize it with an action and unpersist it after inspection.
@@ -62,7 +64,7 @@ Persist only the reused intermediate DataFrame, materialize it with an action an
 
 Compare repeated stage patterns and check the Storage tab in the optimized run.
 
-Expected values are patterns, not exact numbers: optimized should show a persisted dataset in Storage while the app is paused, but storage memory, task time, GC time and shuffle bytes can differ by machine.
+Expected values are patterns, not exact numbers: optimized should show cached partitions and a non-empty Storage tab while the app is paused, but storage memory, task time, GC time and shuffle bytes can differ by machine.
 
 ## Cleanup Notes
 

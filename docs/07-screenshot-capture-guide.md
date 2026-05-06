@@ -1,6 +1,6 @@
 # Screenshot Capture Guide
 
-This guide helps you capture evidence for articles, talks or internal documentation. It does not include screenshots in the repository.
+This guide helps you capture Spark UI evidence for learning, troubleshooting and lab documentation. Screenshots are optional, but they can make Spark UI concepts easier to recognize.
 
 Use it together with the [Runbook](01-runbook.md), [Spark UI Map](02-spark-ui-map.md) and [Case Catalog](03-case-catalog.md).
 
@@ -12,7 +12,7 @@ Use it together with the [Runbook](01-runbook.md), [Spark UI Map](02-spark-ui-ma
 - Do not claim fixed timing or latency numbers. Use UI evidence such as job count, plan shape, task count, shuffle, storage or streaming progress.
 - Prefer History Server screenshots for stable completed applications. Use live UI screenshots only when the case needs active streaming or cached Storage visibility.
 
-## Minimum Article Capture Set
+## Recommended Learning Capture Set
 
 ### Cluster And Setup
 
@@ -174,7 +174,7 @@ Capture:
 
 - Same Structured Streaming metrics for comparison.
 
-## Recommended Article Sequence
+## Recommended Walkthrough Sequence
 
 1. Spark Master UI: cluster is real and reproducible.
 2. Case 01 Jobs tab: repeated actions.
@@ -186,7 +186,7 @@ Capture:
 
 ## Spark UI Map Capture Set
 
-Use this set if you want screenshots inside a Spark UI explanation article or a richer local copy of [Spark UI Map](02-spark-ui-map.md). Keep screenshots focused and crop browser chrome if it does not add context.
+Use this set if you want to enrich [Spark UI Map](02-spark-ui-map.md) with visual examples. Keep screenshots focused and crop browser chrome if it does not add context.
 
 Suggested filenames under `docs/assets/spark-ui-map/`:
 
@@ -210,4 +210,4 @@ Suggested filenames under `docs/assets/spark-ui-map/`:
 | 16 | `16-environment-spark-properties.png` | Environment tab | Spark Properties with relevant config keys. |
 | 17 | `17-structured-streaming-progress.png` | Structured Streaming tab | Batch duration, input rows/sec, processed rows/sec. |
 
-Do not include every screenshot in the public README. Use them selectively: one overview screenshot, one Jobs/Stages example, one SQL plan example, one Storage example and one Structured Streaming example are usually enough for an article.
+Do not include every screenshot everywhere. Use them selectively: one overview screenshot, one Jobs/Stages example, one SQL plan example, one Storage example and one Structured Streaming example are usually enough to improve understanding without making the documentation heavy.
