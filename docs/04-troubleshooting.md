@@ -1,0 +1,87 @@
+# Troubleshooting
+
+## Docker Not Running
+
+Start Docker Desktop, then run:
+
+```bash
+./scripts/up.sh
+```
+
+## Ports Already In Use
+
+The lab uses `8080`, `8081`, `8082`, `4040`, `18080` and optionally `9092`. Stop the conflicting process or change the port mapping in `docker-compose.yml`.
+
+## Spark App Finished Before Opening Live UI
+
+Open Spark History Server at <http://localhost:18080>. Event logs are persisted in the shared `spark-events` volume.
+
+## Event Logs Not Appearing
+
+Check that `spark-history-server` is running:
+
+```bash
+docker compose ps
+```
+
+Then rerun a case and wait a few seconds after it exits. The History Server scans `file:/opt/spark-events`.
+
+## Redpanda Broker Not Running
+
+Streaming cases require:
+
+```bash
+./scripts/up-streaming.sh
+./scripts/create-topics.sh
+```
+
+Batch cases do not require Redpanda.
+
+## Topics Missing
+
+Run:
+
+```bash
+./scripts/create-topics.sh
+```
+
+Then produce deterministic input:
+
+```bash
+./scripts/produce-streaming-data.sh
+```
+
+## Streaming Checkpoint Cleanup
+
+Use:
+
+```bash
+./scripts/reset-streaming.sh
+```
+
+This deletes and recreates streaming topics and removes streaming checkpoints.
+
+## Reset Generated Data
+
+```bash
+./scripts/clean.sh
+./scripts/generate-data.sh
+```
+
+## Rerun A Case From Scratch
+
+For batch:
+
+```bash
+./scripts/clean.sh
+./scripts/generate-data.sh
+./scripts/run-case.sh 03_shuffle_explosion baseline
+```
+
+For streaming:
+
+```bash
+./scripts/reset-streaming.sh
+./scripts/produce-streaming-data.sh
+./scripts/run-case.sh 15_structured_streaming_backlog baseline
+```

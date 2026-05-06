@@ -1,0 +1,56 @@
+# 15 Structured Streaming Backlog
+
+## Problem
+
+Input rate exceeds processing rate in a micro-batch streaming query.
+
+## Why It Matters
+
+Backlog symptoms show up as growing batch duration or processed rows/sec lagging input rows/sec.
+
+## Baseline Command
+
+```bash
+./scripts/up-streaming.sh
+./scripts/create-topics.sh
+./scripts/produce-streaming-data.sh
+./scripts/run-case.sh 15_structured_streaming_backlog baseline
+```
+
+## What To Inspect In Spark UI
+
+Structured Streaming.
+
+## Expected Baseline Symptoms
+
+Batch duration is intentionally slower than the trigger interval because the query adds processing delay.
+
+## Diagnosis Explanation
+
+The query is doing more work per trigger than it can comfortably finish.
+
+## Optimized Command
+
+```bash
+./scripts/run-case.sh 15_structured_streaming_backlog optimized
+```
+
+## Expected Optimized Symptoms
+
+Batch duration should be steadier because offset volume is reduced and artificial delay is removed.
+
+## Explanation Of The Fix
+
+Tune input rate and processing logic so each trigger can complete predictably.
+
+## How To Verify Improvement
+
+Compare batch duration, input rows/sec and processed rows/sec.
+
+## Cleanup Notes
+
+Use `./scripts/reset-streaming.sh` to reset topics and checkpoints.
+
+## Optional AI-Assisted Diagnosis
+
+Use `docs/ai/02-baseline-vs-optimized-comparison-prompt.md` with streaming progress metrics.

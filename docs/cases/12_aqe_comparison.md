@@ -1,0 +1,53 @@
+# 12 AQE Comparison
+
+## Problem
+
+Adaptive Query Execution is disabled for a shuffle-heavy query.
+
+## Why It Matters
+
+AQE can adapt plans at runtime, especially around shuffle partitioning.
+
+## Baseline Command
+
+```bash
+./scripts/run-case.sh 12_aqe_comparison baseline
+```
+
+## What To Inspect In Spark UI
+
+SQL and Stages.
+
+## Expected Baseline Symptoms
+
+The plan is non-adaptive and uses the configured shuffle partitions directly.
+
+## Diagnosis Explanation
+
+AQE is disabled, so Spark cannot coalesce or adapt shuffle behavior at runtime.
+
+## Optimized Command
+
+```bash
+./scripts/run-case.sh 12_aqe_comparison optimized
+```
+
+## Expected Optimized Symptoms
+
+The SQL plan shows adaptive planning evidence.
+
+## Explanation Of The Fix
+
+Enable AQE and compare physical plan and stage behavior.
+
+## How To Verify Improvement
+
+Compare the SQL plan and shuffle stage details.
+
+## Cleanup Notes
+
+No special cleanup required.
+
+## Optional AI-Assisted Diagnosis
+
+Use `docs/ai/02-baseline-vs-optimized-comparison-prompt.md` with SQL and stage evidence.
