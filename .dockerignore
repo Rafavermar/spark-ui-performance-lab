@@ -1,0 +1,15 @@
+.git
+.env
+target
+project/target
+project/project
+.bloop
+.bsp
+.metals
+.idea
+.vscode
+data/generated
+metrics
+tmp
+docs
+_article_capture_plan.md

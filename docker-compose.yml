@@ -1,0 +1,141 @@
+name: spark-ui-performance-lab
+
+x-spark-image: &spark-image
+  image: spark-ui-performance-lab-spark:${SPARK_VERSION:-4.1.1}
+  build:
+    context: .
+    dockerfile: docker/spark-client/Dockerfile
+    args:
+      SPARK_VERSION: ${SPARK_VERSION:-4.1.1}
+      SPARK_HADOOP_PROFILE: ${SPARK_HADOOP_PROFILE:-hadoop3}
+      SCALA_VERSION: ${SCALA_VERSION:-2.13.17}
+      SBT_VERSION: ${SBT_VERSION:-1.10.7}
+      JAVA_BASE_IMAGE: ${JAVA_BASE_IMAGE:-eclipse-temurin:17.0.13_11-jdk-jammy}
+      APACHE_SPARK_DIST_BASE_URL: ${APACHE_SPARK_DIST_BASE_URL:-https://archive.apache.org/dist/spark}
+
+x-spark-common: &spark-common
+  <<: *spark-image
+  environment:
+    SPARK_NO_DAEMONIZE: "true"
+    SPARK_MASTER_URL: ${SPARK_MASTER_URL:-spark://spark-master:7077}
+    SPARK_DRIVER_MEMORY: ${SPARK_DRIVER_MEMORY:-1g}
+    SPARK_EXECUTOR_MEMORY: ${SPARK_EXECUTOR_MEMORY:-1g}
+  volumes:
+    - .:/workspace
+    - spark-events:/opt/spark-events
+    - spark-warehouse:/opt/spark-warehouse
+    - spark-checkpoints:/opt/spark-checkpoints
+    - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
+    - ./conf/log4j2.properties:/opt/spark/conf/log4j2.properties:ro
+  networks:
+    - spark-lab
+
+services:
+  spark-master:
+    <<: *spark-common
+    container_name: spark-ui-lab-master
+    command:
+      - bash
+      - -lc
+      - exec /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master --host spark-master --port 7077 --webui-port 8080
+    ports:
+      - "7077:7077"
+      - "8080:8080"
+
+  spark-worker-1:
+    <<: *spark-common
+    container_name: spark-ui-lab-worker-1
+    command:
+      - bash
+      - -lc
+      - exec /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077 --host spark-worker-1 --webui-port 8081 --cores ${SPARK_WORKER_CORES:-2} --memory ${SPARK_WORKER_MEMORY:-2g}
+    depends_on:
+      - spark-master
+    ports:
+      - "8081:8081"
+
+  spark-worker-2:
+    <<: *spark-common
+    container_name: spark-ui-lab-worker-2
+    command:
+      - bash
+      - -lc
+      - exec /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077 --host spark-worker-2 --webui-port 8082 --cores ${SPARK_WORKER_CORES:-2} --memory ${SPARK_WORKER_MEMORY:-2g}
+    depends_on:
+      - spark-master
+    ports:
+      - "8082:8082"
+
+  spark-history-server:
+    <<: *spark-common
+    container_name: spark-ui-lab-history
+    command:
+      - bash
+      - -lc
+      - exec /opt/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer
+    depends_on:
+      - spark-master
+    ports:
+      - "18080:18080"
+
+  spark-client:
+    <<: *spark-common
+    container_name: spark-ui-lab-client
+    working_dir: /workspace
+    command:
+      - bash
+      - -lc
+      - tail -f /dev/null
+    depends_on:
+      - spark-master
+      - spark-worker-1
+      - spark-worker-2
+    ports:
+      - "4040:4040"
+    volumes:
+      - .:/workspace
+      - spark-events:/opt/spark-events
+      - spark-warehouse:/opt/spark-warehouse
+      - spark-checkpoints:/opt/spark-checkpoints
+      - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
+      - ./conf/log4j2.properties:/opt/spark/conf/log4j2.properties:ro
+
+  redpanda:
+    image: ${REDPANDA_IMAGE:-docker.redpanda.com/redpandadata/redpanda:v26.1.5}
+    container_name: spark-ui-lab-redpanda
+    profiles:
+      - streaming
+    command:
+      - redpanda
+      - start
+      - --mode
+      - dev-container
+      - --smp
+      - "1"
+      - --memory
+      - 1G
+      - --reserve-memory
+      - 0M
+      - --overprovisioned
+      - --kafka-addr
+      - internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr
+      - internal://redpanda:9092,external://localhost:9092
+      - --default-log-level
+      - warn
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    networks:
+      - spark-lab
+    ports:
+      - "9092:19092"
+
+networks:
+  spark-lab:
+    name: spark-ui-performance-lab
+
+volumes:
+  spark-events:
+  spark-warehouse:
+  spark-checkpoints:
+  redpanda-data:

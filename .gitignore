@@ -1,0 +1,27 @@
+.env
+
+# Build outputs
+target/
+project/target/
+project/project/
+.bloop/
+.bsp/
+.metals/
+
+# Generated lab artifacts
+data/generated/
+metrics/*
+tmp/*
+!metrics/.gitkeep
+!tmp/.gitkeep
+!data/.gitkeep
+
+# Local editor and OS files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
