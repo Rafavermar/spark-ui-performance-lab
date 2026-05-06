@@ -16,6 +16,28 @@ The lab uses `8080`, `8081`, `8082`, `4040`, `18080` and optionally `9092`. Stop
 
 Open Spark History Server at <http://localhost:18080>. Event logs are persisted in the shared `spark-events` volume.
 
+## Git Bash Converts Container Paths On Windows
+
+Symptom:
+
+```text
+Local jar /workspace/C:/Program Files/Git/workspace/target/... does not exist
+Error: Failed to load class lab.Main.
+```
+
+Cause:
+
+Git Bash/MSYS can automatically convert Linux-style paths such as `/workspace/...` into Windows paths. Those paths are wrong inside Docker containers.
+
+Fix:
+
+The project scripts set `MSYS_NO_PATHCONV=1` and `MSYS2_ARG_CONV_EXCL=*` before calling Docker. If you run `docker compose exec ... spark-submit` manually from Git Bash, set the same variables first:
+
+```bash
+export MSYS_NO_PATHCONV=1
+export MSYS2_ARG_CONV_EXCL="*"
+```
+
 ## Event Logs Not Appearing
 
 Check that `spark-history-server` is running:
