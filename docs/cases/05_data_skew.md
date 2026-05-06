@@ -26,6 +26,10 @@ Task duration distribution is uneven, with one or a few tasks much slower.
 
 The hot key sends too much data to the same reduce-side task.
 
+## Code-Level Cause
+
+`DataSkewCase.runBaseline` joins skewed data on `join_key` with AQE skew join handling disabled. The generated data contains a dominant hot key, so work is unevenly distributed.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ Task duration should be less uneven because the hot key is salted across multipl
 ## Explanation Of The Fix
 
 Salt the skewed key and expand the small side for that key so the join remains correct.
+
+## Code-Level Fix
+
+`DataSkewCase.runOptimized` adds a `salt` column for the hot key, expands the matching right-side row with `explode(sequence(0, 15))`, joins on `join_key, salt` and enables AQE skew handling.
 
 ## How To Verify Improvement
 

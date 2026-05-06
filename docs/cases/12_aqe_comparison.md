@@ -26,6 +26,10 @@ The plan is non-adaptive and uses the configured shuffle partitions directly.
 
 AQE is disabled, so Spark cannot coalesce or adapt shuffle behavior at runtime.
 
+## Code-Level Cause
+
+`AqeComparisonCase.runBaseline` sets `spark.sql.adaptive.enabled=false`, disables broadcast and uses `spark.sql.shuffle.partitions=64` for the comparison query.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ The SQL plan shows adaptive planning evidence.
 ## Explanation Of The Fix
 
 Enable AQE and compare physical plan and stage behavior.
+
+## Code-Level Fix
+
+`AqeComparisonCase.runOptimized` keeps the same query shape but sets `spark.sql.adaptive.enabled=true`, so the SQL tab can show adaptive planning evidence.
 
 ## How To Verify Improvement
 

@@ -26,6 +26,10 @@ The physical plan includes UDF-related expressions.
 
 The logic is simple, but Catalyst sees it as a UDF expression.
 
+## Code-Level Cause
+
+`UdfCostCase.runBaseline` uses a Scala UDF to label each row as `even` or `odd`. This simple logic is visible in the plan as UDF-related execution instead of native SQL expressions.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ The SQL plan uses built-in conditional expressions.
 ## Explanation Of The Fix
 
 Replace the UDF with built-in functions such as `when` and `otherwise`.
+
+## Code-Level Fix
+
+`UdfCostCase.runOptimized` replaces the UDF with `when($"id" % 2 === 0, lit("even")).otherwise(lit("odd"))`.
 
 ## How To Verify Improvement
 

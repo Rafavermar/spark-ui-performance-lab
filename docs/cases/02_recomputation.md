@@ -26,6 +26,10 @@ Repeated stages appear for the same transformation lineage. Storage does not sho
 
 The DataFrame is reused by several actions, but Spark has no stored intermediate result to reuse.
 
+## Code-Level Cause
+
+`Recomputation.runBaseline` builds `expensiveFrame(spark)` and then runs `count`, `distinct().count()` and grouped `count` over it without persistence. The hash and score transformations can be recomputed for each action.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ The Storage tab shows a persisted DataFrame during inspection, and later actions
 ## Explanation Of The Fix
 
 Persist only the reused intermediate DataFrame, materialize it with an action and unpersist it after inspection.
+
+## Code-Level Fix
+
+`Recomputation.runOptimized` applies `persist(StorageLevel.MEMORY_AND_DISK)`, materializes with `df.count()`, reuses the DataFrame for later actions and unpersists after inspection.
 
 ## How To Verify Improvement
 

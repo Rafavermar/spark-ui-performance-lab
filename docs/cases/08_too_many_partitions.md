@@ -26,6 +26,10 @@ Hundreds of tiny tasks appear.
 
 The partition count is too high for the data size.
 
+## Code-Level Cause
+
+`TooManyPartitionsCase.runBaseline` forces only `30000` rows into `400` partitions. The UI shows the cost of scheduling many tiny tasks.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ Task count is lower and each task has more useful work.
 ## Explanation Of The Fix
 
 Coalesce or repartition to a sensible number.
+
+## Code-Level Fix
+
+`TooManyPartitionsCase.runOptimized` starts with fewer partitions and applies `coalesce(12)`, keeping enough parallelism without hundreds of tiny tasks.
 
 ## How To Verify Improvement
 

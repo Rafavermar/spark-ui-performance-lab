@@ -29,6 +29,10 @@ State rows accumulate for a wide window with no watermark.
 
 The query groups by window and key without a bounded state cleanup strategy.
 
+## Code-Level Cause
+
+`StatefulStreamingCase.runBaseline` groups by a `10 minutes` window and `key` without a watermark, then writes in `complete` mode. This makes state growth visible in the Structured Streaming tab.
+
 ## Optimized Command
 
 ```bash
@@ -42,6 +46,10 @@ The query uses watermarking and shorter windows, making state behavior easier to
 ## Explanation Of The Fix
 
 Add watermarking and design stateful aggregations with bounded windows.
+
+## Code-Level Fix
+
+`StatefulStreamingCase.runOptimized` adds `withWatermark("event_ts", "1 minute")`, changes the window to `1 minute` and uses `append` output mode.
 
 ## How To Verify Improvement
 

@@ -29,6 +29,10 @@ The query uses regular micro-batch processing with Kafka source and sink.
 
 The baseline establishes standard micro-batch behavior for comparison.
 
+## Code-Level Baseline
+
+`RealTimeModeCase.runBaseline` runs a stateless Kafka-to-Kafka query with standard micro-batch execution using `Trigger.ProcessingTime("5 seconds")`.
+
 ## Optimized Command
 
 ```bash
@@ -44,6 +48,10 @@ The query uses Spark 4.1 real-time trigger where supported.
 ## Explanation Of The Fix
 
 Use real-time mode only for a stateless streaming query and compare Structured Streaming progress evidence.
+
+## Code-Level Advanced Mode
+
+`RealTimeModeCase.runOptimized` sets `spark.sql.streaming.realTimeMode.minBatchDuration=5s` and uses `Trigger.RealTime("5 seconds")` for the same stateless Kafka-to-Kafka query. `optimized` is accepted as an alias for `advanced`.
 
 ## How To Verify Improvement
 

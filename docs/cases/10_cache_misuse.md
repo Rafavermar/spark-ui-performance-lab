@@ -26,6 +26,10 @@ The Storage tab shows cached data, but the cached DataFrame is not reused enough
 
 Caching is a cost unless downstream actions reuse the cached result.
 
+## Code-Level Cause
+
+`CacheMisuseCase.runBaseline` creates a wide payload, persists it with `StorageLevel.MEMORY_AND_DISK`, materializes it and then uses it only once downstream.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ Storage remains empty or much quieter.
 ## Explanation Of The Fix
 
 Cache only reused intermediate results and unpersist explicitly.
+
+## Code-Level Fix
+
+`CacheMisuseCase.runOptimized` removes `persist` entirely and runs the aggregation directly from the source DataFrame.
 
 ## How To Verify Improvement
 

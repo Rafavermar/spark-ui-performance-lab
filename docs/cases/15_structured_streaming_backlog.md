@@ -29,6 +29,10 @@ Batch duration is intentionally slower than the trigger interval because the que
 
 The query is doing more work per trigger than it can comfortably finish.
 
+## Code-Level Cause
+
+`StructuredStreamingBacklogCase.runBaseline` reads Kafka with `maxOffsetsPerTrigger=500`, uses a `2 seconds` processing-time trigger and sleeps for `3500` ms inside `foreachBatch`.
+
 ## Optimized Command
 
 ```bash
@@ -42,6 +46,10 @@ Batch duration should be steadier because offset volume is reduced and artificia
 ## Explanation Of The Fix
 
 Tune input rate and processing logic so each trigger can complete predictably.
+
+## Code-Level Fix
+
+`StructuredStreamingBacklogCase.runOptimized` lowers `maxOffsetsPerTrigger` to `150` and removes the artificial `Thread.sleep`.
 
 ## How To Verify Improvement
 

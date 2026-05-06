@@ -26,6 +26,10 @@ One task attempt fails and a retry succeeds.
 
 The baseline intentionally fails one partition once so learners can identify retry evidence.
 
+## Code-Level Cause
+
+`TaskFailureRetryCase.runBaseline` uses `mapPartitionsWithIndex` and intentionally throws once for partition `3` on attempt `0`. A marker file prevents repeated failure, so Spark retries and completes.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ The job completes without the controlled retry.
 ## Explanation Of The Fix
 
 Validate and filter problematic records before processing.
+
+## Code-Level Fix
+
+`TaskFailureRetryCase.runOptimized` introduces one bad raw value, filters values with `rlike("^[0-9]+$")`, casts only valid rows and then aggregates.
 
 ## How To Verify Improvement
 

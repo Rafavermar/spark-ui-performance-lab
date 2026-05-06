@@ -30,6 +30,10 @@ The issue is not a single slow transformation; it is repeated actions over simil
 
 For this introductory case, focus first on the Jobs tab and job count. The DAG is optional; it can help show repeated lineage, but deeper DAG analysis is introduced in later shuffle and join cases.
 
+## Code-Level Cause
+
+`TooManyActions.runBaseline` executes several actions over the same DataFrame: `count`, filtered `count`, grouped `count` and `collect`. Each action can create a separate Spark job.
+
 ## Optimized Command
 
 ```bash
@@ -45,6 +49,10 @@ Fewer jobs because the summary is computed in one aggregate action.
 Consolidate actions and compute required metrics together where possible.
 
 In `src/main/scala/lab/cases/BatchCasesPart1.scala`, `runBaseline` executes several actions over the same DataFrame. `runOptimized` computes the same learning-relevant metrics in one aggregate action, so Spark has fewer jobs to schedule.
+
+## Code-Level Fix
+
+`TooManyActions.runOptimized` replaces several independent actions with one `agg(...)` that computes total rows, high-score rows and amount sum together.
 
 ## How To Verify Improvement
 

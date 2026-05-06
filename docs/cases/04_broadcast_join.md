@@ -26,6 +26,10 @@ The physical plan shows SortMergeJoin and Exchange operators.
 
 Broadcast is disabled, so Spark must repartition and sort both sides.
 
+## Code-Level Cause
+
+`BroadcastJoinCase.runBaseline` sets `spark.sql.autoBroadcastJoinThreshold=-1` and joins fact and dimension data without a broadcast hint. Spark therefore plans a shuffle join.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ The physical plan should show broadcast exchange and BroadcastHashJoin evidence.
 ## Explanation Of The Fix
 
 Enable broadcast for the small side and use an explicit broadcast hint.
+
+## Code-Level Fix
+
+`BroadcastJoinCase.runOptimized` sets `spark.sql.autoBroadcastJoinThreshold=20m` and joins with `broadcast(SyntheticData.dim(spark))`.
 
 ## How To Verify Improvement
 

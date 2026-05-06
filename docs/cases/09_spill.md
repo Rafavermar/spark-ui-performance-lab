@@ -26,6 +26,10 @@ Look for memory spill, disk spill, long task times or executor memory pressure. 
 
 The baseline keeps wide payloads and uses few shuffle partitions.
 
+## Code-Level Cause
+
+`SpillCase.runBaseline` sets `spark.sql.shuffle.partitions=4`, creates wide SHA-256 string payloads, repartitions by a high-cardinality key and sorts within partitions. This increases per-task memory pressure.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ Lower memory pressure because the query narrows rows and uses more reasonable pa
 ## Explanation Of The Fix
 
 Avoid unnecessary wide rows and distribute work across more partitions.
+
+## Code-Level Fix
+
+`SpillCase.runOptimized` raises shuffle partitions to `24`, replaces the wide string payload with a numeric metric and reduces aggregation cardinality.
 
 ## How To Verify Improvement
 

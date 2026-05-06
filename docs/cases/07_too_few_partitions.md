@@ -26,6 +26,10 @@ Very few tasks appear, and executor utilization is low.
 
 The workload is forced into too few partitions.
 
+## Code-Level Cause
+
+`TooFewPartitionsCase.runBaseline` creates the range with one partition: `spark.range(..., 1)`. The following computation has too few tasks to keep both workers busy.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ More tasks are available for the workers.
 ## Explanation Of The Fix
 
 Repartition to a reasonable local demo value.
+
+## Code-Level Fix
+
+`TooFewPartitionsCase.runOptimized` starts with `16` partitions and calls `repartition(16)` before running the same grouping logic.
 
 ## How To Verify Improvement
 

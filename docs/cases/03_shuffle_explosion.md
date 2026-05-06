@@ -26,6 +26,10 @@ The SQL plan shows Exchange operators. Stages show shuffle read/write for wide r
 
 The query groups before filtering or projecting down to the required columns.
 
+## Code-Level Cause
+
+`ShuffleExplosion.runBaseline` groups by `country_id`, `category_id`, `payload_a` and `payload_b`, then orders by the aggregate. It also sets `spark.sql.shuffle.partitions=48`, making the wide shuffle easy to spot in the SQL and Stages tabs.
+
 ## Optimized Command
 
 ```bash
@@ -39,6 +43,10 @@ The optimized plan still shuffles for aggregation, but it shuffles fewer columns
 ## Explanation Of The Fix
 
 Filter early, select only required columns and use a smaller local shuffle partition count.
+
+## Code-Level Fix
+
+`ShuffleExplosion.runOptimized` filters `is_active` records for selected countries, projects only `country_id`, `category_id` and `amount`, groups by fewer keys and lowers shuffle partitions to `12`.
 
 ## How To Verify Improvement
 

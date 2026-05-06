@@ -223,6 +223,14 @@ Diagnosis:
 
 - Spark recomputes lineage because nothing is persisted.
 
+Code-level cause:
+
+- In `src/main/scala/lab/cases/BatchCasesPart1.scala`, `Recomputation.runBaseline` builds `expensiveFrame(spark)` once and then runs three actions over it:
+  - `df.count()`
+  - `df.select("bucket").distinct().count()`
+  - `df.groupBy("bucket").agg(avg("score")).count()`
+- Because the DataFrame is not persisted, Spark is free to recompute the expensive hash/score lineage for each action.
+
 Optimized:
 
 ```bash
@@ -233,6 +241,11 @@ Verify:
 
 - Storage tab shows the persisted DataFrame while the app is paused.
 - Later actions reuse the persisted result.
+
+Code-level fix:
+
+- `Recomputation.runOptimized` applies `persist(StorageLevel.MEMORY_AND_DISK)`.
+- It materializes the cache with `df.count()`, reuses the persisted DataFrame for later actions and unpersists it after inspection.
 
 ### 03_shuffle_explosion
 
@@ -259,6 +272,12 @@ Diagnosis:
 
 - The query shuffles wide rows and too many grouping keys.
 
+Code-level cause:
+
+- In `ShuffleExplosion.runBaseline`, the query groups by `country_id`, `category_id`, `payload_a` and `payload_b`.
+- It keeps wide payload columns until the shuffle and uses `spark.sql.shuffle.partitions=48`.
+- The wide `groupBy` plus `orderBy(desc("amount_sum"))` forces expensive `Exchange` operators in the SQL plan.
+
 Optimized:
 
 ```bash
@@ -270,6 +289,12 @@ Verify:
 - SQL scan reads fewer columns.
 - The plan filters earlier.
 - Shuffle partition count is lower.
+
+Code-level fix:
+
+- `ShuffleExplosion.runOptimized` filters early with `is_active` and `country_id < 12`.
+- It selects only `country_id`, `category_id` and `amount` before aggregation.
+- It groups by fewer keys and reduces shuffle partitions to `12` for this laptop-scale lab.
 
 ### 04_broadcast_join
 
@@ -291,6 +316,11 @@ Expected baseline evidence:
 - Physical plan shows `SortMergeJoin`.
 - Exchanges appear on both sides of the join.
 
+Code-level cause:
+
+- In `BroadcastJoinCase.runBaseline`, `spark.sql.autoBroadcastJoinThreshold` is set to `-1`.
+- Spark joins `SyntheticData.fact(spark)` and `SyntheticData.dim(spark)` without a broadcast hint, so both sides are shuffled and sorted.
+
 Optimized:
 
 ```bash
@@ -300,6 +330,11 @@ Optimized:
 Verify:
 
 - Physical plan shows broadcast join evidence, such as `BroadcastHashJoin` or broadcast exchange.
+
+Code-level fix:
+
+- `BroadcastJoinCase.runOptimized` sets `spark.sql.autoBroadcastJoinThreshold=20m`.
+- It also wraps the small dimension side with `broadcast(SyntheticData.dim(spark))`.
 
 ### 05_data_skew
 
@@ -322,6 +357,12 @@ Expected baseline evidence:
 - Task durations are uneven.
 - A small number of tasks run much longer than the rest.
 
+Code-level cause:
+
+- In `DataSkewCase.runBaseline`, `SyntheticData.skew(spark)` contains a dominant hot key.
+- AQE skew join handling is disabled with `spark.sql.adaptive.skewJoin.enabled=false`.
+- The join runs on `join_key`, so the hot key can concentrate work into a small number of tasks.
+
 Optimized:
 
 ```bash
@@ -332,6 +373,13 @@ Verify:
 
 - Task duration distribution is less uneven.
 - The optimized source code salts the hot key.
+
+Code-level fix:
+
+- `DataSkewCase.runOptimized` enables AQE skew handling.
+- It adds a `salt` column to the hot-key records on the left side.
+- It expands the matching hot-key row on the right side with `explode(sequence(0, 15))`.
+- The join changes from `join_key` to `join_key, salt`, spreading the hot-key work across more tasks.
 
 ### 06_small_files
 
@@ -353,6 +401,11 @@ Expected baseline evidence:
 - Many short tasks.
 - Input partition count is higher than needed for the data size.
 
+Code-level cause:
+
+- In `SmallFilesCase.runBaseline`, Spark reads `data/generated/small_files` directly as JSON.
+- The generated dataset intentionally contains many tiny files, so Spark creates many small scan tasks.
+
 Optimized:
 
 ```bash
@@ -363,6 +416,12 @@ Verify:
 
 - The optimized run compacts to Parquet under `tmp/`.
 - Downstream input partition count is lower.
+
+Code-level fix:
+
+- `SmallFilesCase.runOptimized` reads the small JSON files once.
+- It writes a compacted Parquet dataset with `raw.coalesce(8).write.parquet(...)`.
+- It then reads the compacted Parquet path for downstream processing.
 
 ### 07_too_few_partitions
 
@@ -384,6 +443,11 @@ Expected baseline evidence:
 - Very few tasks.
 - Executors are not used evenly.
 
+Code-level cause:
+
+- In `TooFewPartitionsCase.runBaseline`, `spark.range(..., 1)` creates a single input partition.
+- The following transformations cannot use the available workers effectively because there is too little parallel work.
+
 Optimized:
 
 ```bash
@@ -394,6 +458,11 @@ Verify:
 
 - More tasks are available.
 - Executors show more activity.
+
+Code-level fix:
+
+- `TooFewPartitionsCase.runOptimized` starts the range with `16` partitions and calls `repartition(16)`.
+- The same computation now has enough tasks to use both workers.
 
 ### 08_too_many_partitions
 
@@ -415,6 +484,11 @@ Expected baseline evidence:
 - Hundreds of tiny tasks.
 - Task scheduling overhead dominates useful work.
 
+Code-level cause:
+
+- In `TooManyPartitionsCase.runBaseline`, a small `30000` row range is forced into `400` partitions.
+- Spark spends visible time scheduling many tiny tasks with little useful work per task.
+
 Optimized:
 
 ```bash
@@ -425,6 +499,11 @@ Verify:
 
 - Fewer tasks.
 - More reasonable partition count for the data size.
+
+Code-level fix:
+
+- `TooManyPartitionsCase.runOptimized` starts with fewer partitions and applies `coalesce(12)`.
+- This keeps enough parallelism for the lab cluster while reducing scheduler overhead.
 
 ### 09_spill
 
@@ -446,6 +525,12 @@ Expected baseline evidence:
 - Look for memory spill, disk spill, long tasks or memory pressure.
 - Spill visibility depends on machine resources.
 
+Code-level cause:
+
+- In `SpillCase.runBaseline`, `spark.sql.shuffle.partitions` is reduced to `4`.
+- The DataFrame creates wide string payloads, repartitions by a high-cardinality key and sorts within partitions.
+- This intentionally increases per-task memory pressure.
+
 Optimized:
 
 ```bash
@@ -457,6 +542,11 @@ Verify:
 - Rows are narrower.
 - Partitioning is more reasonable.
 - Spill or memory pressure should be lower if it appeared in baseline.
+
+Code-level fix:
+
+- `SpillCase.runOptimized` increases shuffle partitions to `24`.
+- It replaces the wide string payload with a narrow numeric metric and lowers aggregation cardinality.
 
 ### 10_cache_misuse
 
@@ -478,6 +568,11 @@ Expected baseline evidence:
 - Storage tab shows cached data.
 - The cached data is not reused enough to justify the memory.
 
+Code-level cause:
+
+- In `CacheMisuseCase.runBaseline`, a wide DataFrame is persisted with `StorageLevel.MEMORY_AND_DISK`.
+- The cached DataFrame is materialized and then used only once downstream, so the Storage tab shows memory usage without a real reuse benefit.
+
 Optimized:
 
 ```bash
@@ -487,6 +582,11 @@ Optimized:
 Verify:
 
 - Storage tab is empty or much quieter.
+
+Code-level fix:
+
+- `CacheMisuseCase.runOptimized` removes the unnecessary `persist`.
+- The aggregation runs directly from the source DataFrame.
 
 ### 11_udf_cost
 
@@ -506,6 +606,11 @@ Expected baseline evidence:
 
 - The plan includes UDF-related expressions.
 
+Code-level cause:
+
+- In `UdfCostCase.runBaseline`, simple even/odd labeling is implemented with a Scala UDF.
+- The logic is easy, but the UDF makes the SQL plan less optimizer-friendly than native Spark SQL expressions.
+
 Optimized:
 
 ```bash
@@ -515,6 +620,11 @@ Optimized:
 Verify:
 
 - The SQL plan uses built-in conditional expressions.
+
+Code-level fix:
+
+- `UdfCostCase.runOptimized` replaces the UDF with `when(...).otherwise(...)`.
+- Catalyst can represent the logic directly in the SQL physical plan.
 
 ### 12_aqe_comparison
 
@@ -535,6 +645,11 @@ Expected baseline evidence:
 
 - Non-adaptive physical plan.
 
+Code-level cause:
+
+- In `AqeComparisonCase.runBaseline`, `spark.sql.adaptive.enabled=false`.
+- Broadcast is also disabled and shuffle partitions are set to `64`, making the query shape easier to compare without adaptive changes.
+
 Optimized:
 
 ```bash
@@ -545,6 +660,11 @@ Verify:
 
 - SQL plan shows adaptive planning evidence.
 - Stage behavior may show coalesced or adapted shuffle behavior.
+
+Code-level fix:
+
+- `AqeComparisonCase.runOptimized` runs the same query with `spark.sql.adaptive.enabled=true`.
+- The intended comparison is the same business logic with adaptive planning enabled.
 
 ### 13_task_failure_retry
 
@@ -567,6 +687,11 @@ Expected baseline evidence:
 - One failed task attempt.
 - A later retry succeeds.
 
+Code-level cause:
+
+- In `TaskFailureRetryCase.runBaseline`, partition `3` throws a controlled exception on attempt `0`.
+- A marker file under `/opt/spark-checkpoints` prevents repeated failure, so Spark retries once and the job can still finish.
+
 Optimized:
 
 ```bash
@@ -577,6 +702,11 @@ Verify:
 
 - No controlled retry.
 - Input is validated before processing.
+
+Code-level fix:
+
+- `TaskFailureRetryCase.runOptimized` creates one bad record but validates `raw_value` with a numeric regex before casting.
+- Bad input is filtered before the aggregation, so no task retry is expected.
 
 ### 14_config_validation
 
@@ -597,6 +727,11 @@ Expected baseline evidence:
 - Spark Properties show the actual values.
 - Terminal output prints the same key configuration values.
 
+Code-level cause:
+
+- In `ConfigValidationCase.runBaseline`, the case prints selected values from `SparkConf` and `spark.conf`.
+- This is not a performance fix by itself; it proves that the Environment tab is the source of truth for active Spark properties.
+
 Optimized:
 
 ```bash
@@ -607,6 +742,12 @@ Verify:
 
 - The script passes explicit `spark-submit` config.
 - Environment tab confirms the applied values.
+
+Code-level fix:
+
+- The Scala code is intentionally the same for baseline and optimized.
+- The difference comes from `scripts/run-case.sh`, which passes explicit `--conf` values for this optimized mode.
+- The verification happens in the Spark UI Environment tab.
 
 ## 8. Streaming Setup
 
@@ -662,6 +803,11 @@ Expected baseline evidence:
 - Batch duration can exceed trigger interval.
 - Processed rows/sec can lag input rows/sec.
 
+Code-level cause:
+
+- In `StructuredStreamingBacklogCase.runBaseline`, Kafka input uses `maxOffsetsPerTrigger=500`.
+- The `foreachBatch` block intentionally sleeps for `3500` ms while the trigger interval is `2 seconds`.
+
 Optimized:
 
 ```bash
@@ -673,6 +819,11 @@ Verify:
 - Lower `maxOffsetsPerTrigger`.
 - No artificial processing delay.
 - Batch duration should be steadier.
+
+Code-level fix:
+
+- `StructuredStreamingBacklogCase.runOptimized` lowers `maxOffsetsPerTrigger` to `150`.
+- It removes the artificial `Thread.sleep`, so each trigger has a better chance to complete predictably.
 
 ### 16_stateful_streaming
 
@@ -693,6 +844,11 @@ Expected baseline evidence:
 
 - State rows accumulate for the aggregation.
 
+Code-level cause:
+
+- In `StatefulStreamingCase.runBaseline`, the stream groups by a `10 minutes` window and `key`.
+- There is no watermark, and the query uses `complete` output mode, so state can grow without a bounded event-time cleanup strategy.
+
 Optimized:
 
 ```bash
@@ -704,6 +860,12 @@ Verify:
 - Watermark is applied.
 - Window size is smaller.
 - State behavior is easier to bound.
+
+Code-level fix:
+
+- `StatefulStreamingCase.runOptimized` adds `withWatermark("event_ts", "1 minute")`.
+- It changes the window to `1 minute` and uses `append` output mode.
+- This demonstrates bounded state design instead of unbounded complete-mode accumulation.
 
 ### 17_real_time_mode
 
@@ -719,6 +881,10 @@ Inspect:
 
 - Structured Streaming tab.
 
+Code-level baseline:
+
+- In `RealTimeModeCase.runBaseline`, the stateless Kafka-to-Kafka query uses standard micro-batch execution with `Trigger.ProcessingTime("5 seconds")`.
+
 Advanced:
 
 ```bash
@@ -731,6 +897,12 @@ Verify:
 
 - The advanced run uses Spark 4.1 real-time trigger where supported.
 - Do not claim fixed latency. Compare query progress evidence only.
+
+Code-level advanced mode:
+
+- `RealTimeModeCase.runOptimized` sets `spark.sql.streaming.realTimeMode.minBatchDuration=5s`.
+- It uses `Trigger.RealTime("5 seconds")` for the same stateless Kafka-to-Kafka pattern.
+- `optimized` is accepted as an alias for `advanced`, but the documentation uses `advanced` because this is a Spark 4.1 capability demonstration, not a universal performance fix.
 
 ## 10. Metrics Export
 
