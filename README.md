@@ -185,4 +185,5 @@ The goal is to learn Spark UI diagnosis first. The prompt templates help learner
 - [Screenshot capture guide](docs/07-screenshot-capture-guide.md)
 - [Spark configuration guide](docs/08-spark-configuration.md)
 - [Streaming and real-time mode](docs/09-streaming-real-time-mode.md)
+- [Spark architecture primer](docs/10-spark-architecture-primer.md)
 - [Why AI is documentation-only](docs/ai/00-why-ai-is-documentation-only.md)

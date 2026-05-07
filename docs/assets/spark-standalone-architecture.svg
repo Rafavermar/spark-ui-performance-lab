@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="560" viewBox="0 0 1080 560" role="img" aria-labelledby="title desc">
+  <title id="title">Spark Standalone lab architecture</title>
+  <desc id="desc">Docker host running Spark client, Spark master, two workers with executors, shared event logs, History Server and optional Redpanda for streaming cases.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .box { fill: #ffffff; stroke: #334155; stroke-width: 2; rx: 8; }
+      .soft { fill: #eef6ff; stroke: #2563eb; stroke-width: 2; rx: 8; }
+      .stream { fill: #fff7ed; stroke: #ea580c; stroke-width: 2; rx: 8; }
+      .store { fill: #f0fdf4; stroke: #16a34a; stroke-width: 2; rx: 8; }
+      .text { font-family: Arial, sans-serif; fill: #0f172a; font-size: 18px; }
+      .small { font-family: Arial, sans-serif; fill: #334155; font-size: 14px; }
+      .label { font-family: Arial, sans-serif; fill: #475569; font-size: 13px; }
+      .arrow { stroke: #334155; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .dash { stroke-dasharray: 7 6; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#334155"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1080" height="560"/>
+  <text class="text" x="40" y="45">Spark UI Performance Lab Architecture</text>
+  <text class="small" x="40" y="72">Default Docker Compose services plus optional Redpanda for streaming cases</text>
+
+  <rect class="soft" x="45" y="110" width="220" height="110"/>
+  <text class="text" x="70" y="145">spark-client</text>
+  <text class="small" x="70" y="172">spark-submit</text>
+  <text class="small" x="70" y="195">Driver process</text>
+
+  <rect class="box" x="410" y="105" width="230" height="115"/>
+  <text class="text" x="445" y="142">spark-master</text>
+  <text class="small" x="445" y="170">Standalone scheduler</text>
+  <text class="small" x="445" y="193">Master UI :8080</text>
+
+  <rect class="soft" x="770" y="70" width="235" height="140"/>
+  <text class="text" x="805" y="105">spark-worker-1</text>
+  <text class="small" x="805" y="132">Worker UI :8081</text>
+  <rect class="box" x="815" y="152" width="145" height="36"/>
+  <text class="small" x="845" y="176">Executor</text>
+
+  <rect class="soft" x="770" y="245" width="235" height="140"/>
+  <text class="text" x="805" y="280">spark-worker-2</text>
+  <text class="small" x="805" y="307">Worker UI :8082</text>
+  <rect class="box" x="815" y="327" width="145" height="36"/>
+  <text class="small" x="845" y="351">Executor</text>
+
+  <rect class="store" x="405" y="305" width="240" height="120"/>
+  <text class="text" x="440" y="340">spark-events</text>
+  <text class="small" x="440" y="367">Persisted event logs</text>
+  <text class="small" x="440" y="390">History evidence</text>
+
+  <rect class="store" x="405" y="455" width="240" height="70"/>
+  <text class="text" x="430" y="488">History Server</text>
+  <text class="small" x="430" y="512">UI :18080</text>
+
+  <rect class="stream" x="45" y="315" width="220" height="115"/>
+  <text class="text" x="82" y="350">redpanda</text>
+  <text class="small" x="82" y="377">Kafka API :9092</text>
+  <text class="small" x="82" y="400">streaming profile only</text>
+
+  <path class="arrow" d="M265 165 L410 165"/>
+  <text class="label" x="292" y="150">register app</text>
+  <path class="arrow" d="M640 160 L770 140"/>
+  <path class="arrow" d="M640 176 L770 300"/>
+  <text class="label" x="675" y="138">tasks</text>
+  <path class="arrow" d="M190 220 C300 300 350 335 405 355"/>
+  <text class="label" x="245" y="287">event logs</text>
+  <path class="arrow" d="M525 425 L525 455"/>
+  <text class="label" x="540" y="445">read logs</text>
+  <path class="arrow dash" d="M265 370 L405 370"/>
+  <text class="label" x="300" y="355">stream source/sink</text>
+
+  <text class="small" x="55" y="510">Live Spark UI: http://localhost:4040 while the driver is running</text>
+  <text class="small" x="55" y="535">History Server: http://localhost:18080 after the app writes event logs</text>
+</svg>

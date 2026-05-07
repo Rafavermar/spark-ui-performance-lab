@@ -53,6 +53,27 @@ Stage detail metrics:
 - `Memory Spill` and `Disk Spill`: data moved out of memory during execution. These are central in [case 09](cases/09_spill.md).
 - `Locality Level`: where the task ran relative to its data. `NODE_LOCAL` means the task ran on the same worker node as the data; in this Docker lab it is usually not the main bottleneck.
 
+Task percentile cheat sheet:
+
+The stage detail summary is task-level evidence. Think "one task usually means one partition" and read the row as a distribution, not as one global number.
+
+| What you see | Where to look | Likely meaning |
+|---|---|---|
+| `Max` much higher than `75th percentile` or `Median` | Duration, Input, Shuffle, Spill | Skew: one or a few partitions are much larger or slower. |
+| `25th percentile` or `Median` near zero | Input Size/Records or Shuffle | Many empty or near-empty partitions. |
+| Only `Min` near zero | Input or Shuffle | Some empty partitions, but not necessarily a systemic issue. |
+| `GC Time` large compared with `Duration` | GC Time vs Duration | Memory pressure or JVM garbage collection overhead. |
+| Very small input but durations around seconds across many tasks | Input vs Duration | Overhead: too many tasks, scheduling latency, shuffle wait or I/O overhead. |
+
+Mantra:
+
+- `Max` spikes: check for skew.
+- Percentiles near zero: check for empty partitions.
+- GC consumes duration: check memory pressure.
+- Little data but slow tasks: check overhead.
+
+For the architecture behind jobs, stages, tasks and partitions, see [Spark Architecture Primer](10-spark-architecture-primer.md).
+
 ## Storage
 
 Shows cached or persisted DataFrames/RDDs. Use it to verify whether persistence helps or whether memory is wasted.

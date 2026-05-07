@@ -158,7 +158,7 @@ Common UI terms:
 - `WholeStageCodegen`: Spark fused several physical operators into generated JVM code. It is normal; do not treat it as a problem by itself.
 - `Exchange`: shuffle boundary. Treat it as important in shuffle, join, skew and AQE cases.
 
-For the detailed UI vocabulary, use [Spark UI Map](02-spark-ui-map.md).
+For the detailed UI vocabulary, use [Spark UI Map](02-spark-ui-map.md). For the mental model behind driver, executors, jobs, stages, tasks and partitions, use [Spark Architecture Primer](10-spark-architecture-primer.md).
 
 ## 8. What Metrics Are Reproducible
 
