@@ -1,0 +1,105 @@
+@page {
+  size: A4;
+  margin: 18mm 16mm;
+}
+
+body {
+  color: #172033;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  color: #0f172a;
+  line-height: 1.2;
+  page-break-after: avoid;
+}
+
+h1 {
+  border-bottom: 2px solid #f05a28;
+  font-size: 24pt;
+  margin-top: 0;
+  padding-bottom: 8px;
+}
+
+h2 {
+  border-bottom: 1px solid #d8dee9;
+  font-size: 17pt;
+  margin-top: 28px;
+  padding-bottom: 4px;
+}
+
+h3 {
+  font-size: 13pt;
+  margin-top: 18px;
+}
+
+p {
+  margin: 0 0 9px;
+}
+
+ul,
+ol {
+  margin-top: 4px;
+  padding-left: 22px;
+}
+
+li {
+  margin-bottom: 3px;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 12px 0 16px;
+  width: 100%;
+}
+
+th {
+  background: #eef2f7;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+th,
+td {
+  border: 1px solid #ccd5e1;
+  padding: 7px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+code {
+  background: #f3f6fa;
+  border-radius: 3px;
+  color: #0f172a;
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 9.4pt;
+  padding: 1px 3px;
+}
+
+pre {
+  background: #0f172a;
+  border-radius: 6px;
+  color: #e5edf8;
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 8.8pt;
+  line-height: 1.45;
+  overflow-wrap: break-word;
+  padding: 12px 14px;
+  white-space: pre-wrap;
+}
+
+blockquote {
+  border-left: 4px solid #f05a28;
+  color: #475569;
+  margin: 12px 0;
+  padding: 8px 14px;
+}
+
+a {
+  color: #1d4ed8;
+  text-decoration: none;
+}

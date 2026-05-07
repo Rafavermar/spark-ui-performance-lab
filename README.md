@@ -187,3 +187,7 @@ The goal is to learn Spark UI diagnosis first. The prompt templates help learner
 - [Streaming and real-time mode](docs/09-streaming-real-time-mode.md)
 - [Spark architecture primer](docs/10-spark-architecture-primer.md)
 - [Why AI is documentation-only](docs/ai/00-why-ai-is-documentation-only.md)
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
